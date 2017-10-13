@@ -18,6 +18,9 @@ from datetime import datetime
 from dbix.dbix import Schema, SQLSchema, SQLITE, POSTGRESQL, MYSQL
 
 
+here = os.path.abspath(os.path.dirname(__file__))
+
+
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
@@ -94,11 +97,8 @@ def _test_resultset(schema):
 
 def _test_schema(schema):
 
-	#pm_location, dbname = sys.argv[1:3]
-	pm_location = os.path.join(os.path.dirname(__file__), 'data')
+	schema_input = os.path.join(here, 'schema')
 	dbname = 'icecat'
-
-	pm_location = os.path.abspath(pm_location)
 
 	#print(schema.db_list())
 
@@ -108,18 +108,18 @@ def _test_schema(schema):
 	schema.db_connect(dbname)
 
 	schema.load_ddl(
-		pm_location, 
+		schema_input, 
 		#with_fk=False, 
 		#only_tables=['MeasureSign']
 	)
 
 	ddl = schema.ddl(
-		pm_location, 
+		schema_input, 
 		#with_fk=False, 
 		#only_tables=['MeasureSign']
 	)
-	ddl_ext = 'sql' if isinstance(schema, SQLSchema) else 'json'
-	open('%s.%s' % (dbname, ddl_ext), 'wb').write(ddl)
+	ddl_ext = schema.dump_extension
+	open(os.path.join(here, 'dumps/%s%s' % (dbname, ddl_ext)), 'wb').write(ddl)
 
 	if isinstance(schema, SQLSchema) and 0:
 		_test_dml(schema)
@@ -131,13 +131,13 @@ def _test_schema(schema):
 
 def test_main():
 	schema = Schema()
-	schema = SQLITE(path='.')
-	schema = POSTGRESQL(
+	schema = SQLITE(path=os.path.join(here, 'data'))
+	_schema = POSTGRESQL(
 		host='localhost', port=5432, 
 		user='tryton', password='tryton', 
 		user_dba='tryton', password_dba='tryton', 
 	)
-	schema = MYSQL(
+	_schema = MYSQL(
 		host='localhost', port=3306, 
 		user='tryton', password='tryton', 
 		user_dba='root', password_dba='el passo', 

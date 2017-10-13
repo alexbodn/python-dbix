@@ -224,6 +224,8 @@ class Schema(object):
 
 	rs_class = ResultSet
 
+	dump_extension = '.json'
+
 
 	@staticmethod
 	def isfalse(x):

@@ -159,6 +159,9 @@ class SQLSchema(Schema):
 	postfix = ""
 	table_sufix = ""
 	query_prefix = ""
+
+	dump_extension = '.sql'
+
 	type_conv = dict()
 	connection = None
 	inline_domains = False
