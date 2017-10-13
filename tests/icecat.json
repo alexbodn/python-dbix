@@ -1,0 +1,3631 @@
+{
+    "CategoryFeature": {
+        "primary_key": [
+            "category_feature_id"
+        ], 
+        "fields": {
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "mandatory": {
+                "default_value": 0, 
+                "data_type": "tinyint", 
+                "is_nullable": 1
+            }, 
+            "catid": {
+                "data_type": "integer"
+            }, 
+            "searchable": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "no": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "category_feature_id": {
+                "data_type": "integer"
+            }, 
+            "restricted_search_values": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "feature_id": {
+                "data_type": "integer"
+            }, 
+            "use_dropdown_input": {
+                "default_value": "", 
+                "is_nullable": 1, 
+                "data_type": "char", 
+                "size": 3
+            }, 
+            "category_feature_group_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "category_feature_group", 
+                "CategoryFeatureGroup", 
+                [
+                    "category_feature_group_id"
+                ], 
+                [
+                    "category_feature_group_id"
+                ], 
+                {}
+            ], 
+            [
+                "feature", 
+                "Feature", 
+                [
+                    "feature_id"
+                ], 
+                [
+                    "feature_id"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "category_feature_group", 
+                "CategoryFeatureGroup", 
+                [
+                    "category_feature_group_id"
+                ], 
+                [
+                    "category_feature_group_id"
+                ], 
+                {}
+            ], 
+            [
+                "feature", 
+                "Feature", 
+                [
+                    "feature_id"
+                ], 
+                [
+                    "feature_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "feature_id", 
+                    "catid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "feature_id", 
+                    "catid"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "category_feature", 
+        "has_many": [
+            [
+                "product_features", 
+                "ProductFeature", 
+                "category_feature_id"
+            ], 
+            [
+                "product_feature_locals", 
+                "ProductFeatureLocal", 
+                "category_feature_id"
+            ], 
+            [
+                "product_features", 
+                "ProductFeature", 
+                "category_feature_id"
+            ], 
+            [
+                "product_feature_locals", 
+                "ProductFeatureLocal", 
+                "category_feature_id"
+            ]
+        ]
+    }, 
+    "ProductReview": {
+        "primary_key": [
+            "product_review_id"
+        ], 
+        "fields": {
+            "high_review_award_url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "review_code": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 60
+            }, 
+            "review_group": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 60
+            }, 
+            "review_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "value_good": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "langid": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "value": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "product_review_id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "review_award_name": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 120
+            }, 
+            "postscriptum": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "score": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "low_review_award_url": {
+                "default_value": "", 
+                "is_nullable": 0, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "value_bad": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "date_added": {
+                "set_on_create": 1, 
+                "data_type": "date"
+            }, 
+            "logo_url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "product_id", 
+                    "review_id", 
+                    "langid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "product_id", 
+                    "review_id", 
+                    "langid"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_review", 
+        "has_many": []
+    }, 
+    "ProductFamily": {
+        "primary_key": [
+            "family_id"
+        ], 
+        "fields": {
+            "thumb_pic": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "supplier_id": {
+                "data_type": "integer"
+            }, 
+            "catid": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "symbol": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 120
+            }, 
+            "low_pic": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "family_id": {
+                "data_type": "integer"
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }, 
+            "tid": {
+                "data_type": "integer"
+            }, 
+            "parent_family_id": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "data_source_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "parent", 
+                "ProductFamily", 
+                [
+                    "parent_family_id"
+                ], 
+                [
+                    "family_id"
+                ], 
+                {
+                    "join_type": "left"
+                }
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "supplier", 
+                "Supplier", 
+                [
+                    "supplier_id"
+                ], 
+                [
+                    "supplier_id"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "parent", 
+                "ProductFamily", 
+                [
+                    "parent_family_id"
+                ], 
+                [
+                    "family_id"
+                ], 
+                {
+                    "join_type": "left"
+                }
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "supplier", 
+                "Supplier", 
+                [
+                    "supplier_id"
+                ], 
+                [
+                    "supplier_id"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_family", 
+        "has_many": [
+            [
+                "children", 
+                "ProductFamily", 
+                {
+                    "foreign.parent_family_id": "self.family_id"
+                }
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "family_id"
+            ], 
+            [
+                "children", 
+                "ProductFamily", 
+                {
+                    "foreign.parent_family_id": "self.family_id"
+                }
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "family_id"
+            ]
+        ]
+    }, 
+    "FeatureLogoCategory": {
+        "primary_key": [
+            "feature_logo_id", 
+            "category_id"
+        ], 
+        "fields": {
+            "feature_logo_id": {
+                "data_type": "integer"
+            }, 
+            "category_id": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "feature_logo", 
+                "FeatureLogo", 
+                [
+                    "feature_logo_id"
+                ], 
+                [
+                    "feature_logo_id"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "category_id"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "feature_logo", 
+                "FeatureLogo", 
+                [
+                    "feature_logo_id"
+                ], 
+                [
+                    "feature_logo_id"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "category_id"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "feature_logo_category", 
+        "has_many": []
+    }, 
+    "Feature": {
+        "primary_key": [
+            "feature_id"
+        ], 
+        "fields": {
+            "measure_id": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "last_published": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "searchable": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "feature_id": {
+                "data_type": "integer"
+            }, 
+            "tid": {
+                "data_type": "integer"
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }, 
+            "limit_direction": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }, 
+            "restricted_values": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "type": {
+                "data_type": "varchar", 
+                "size": 60
+            }, 
+            "class": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "measure", 
+                "Measure", 
+                [
+                    "measure_id"
+                ], 
+                [
+                    "measure_id"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ], 
+            [
+                "measure", 
+                "Measure", 
+                [
+                    "measure_id"
+                ], 
+                [
+                    "measure_id"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "feature", 
+        "has_many": [
+            [
+                "category_features", 
+                "CategoryFeature", 
+                "feature_id"
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "feature_logos", 
+                "FeatureLogo", 
+                "feature_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "category_features", 
+                "CategoryFeature", 
+                "feature_id"
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "feature_logos", 
+                "FeatureLogo", 
+                "feature_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ]
+        ]
+    }, 
+    "MeasureSign": {
+        "primary_key": [
+            "measure_sign_id"
+        ], 
+        "fields": {
+            "measure_id": {
+                "data_type": "integer"
+            }, 
+            "last_published": {
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "measure_sign_id": {
+                "data_type": "integer"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "value": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "langid": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "measure", 
+                "Measure", 
+                [
+                    "measure_id"
+                ], 
+                [
+                    "measure_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "measure", 
+                "Measure", 
+                [
+                    "measure_id"
+                ], 
+                [
+                    "measure_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "measure_id", 
+                    "langid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "measure_id", 
+                    "langid"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "measure_sign", 
+        "has_many": []
+    }, 
+    "Tex": {
+        "primary_key": [
+            "tex_id"
+        ], 
+        "fields": {
+            "tid": {
+                "data_type": "integer"
+            }, 
+            "tex_id": {
+                "data_type": "integer"
+            }, 
+            "langid": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "value": {
+                "data_type": "mediumtext"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "tid", 
+                    "langid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "tid", 
+                    "langid"
+                ]
+            ]
+        ], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "tex", 
+        "has_many": []
+    }, 
+    "Supplier": {
+        "primary_key": [
+            "supplier_id"
+        ], 
+        "fields": {
+            "thumb_pic": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "has_vendor_index": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "supplier_id": {
+                "data_type": "integer"
+            }, 
+            "user_id": {
+                "default_value": 1, 
+                "data_type": "integer"
+            }, 
+            "name": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "acknowledge": {
+                "default_value": "N", 
+                "data_type": "char", 
+                "size": 1
+            }, 
+            "public_login": {
+                "default_value": "", 
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 80
+            }, 
+            "hide_products": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }, 
+            "suppress_offers": {
+                "default_value": "N", 
+                "data_type": "char", 
+                "size": 1
+            }, 
+            "low_pic": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "public_password": {
+                "default_value": "", 
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 80
+            }, 
+            "last_name": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "folder_name": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "template": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "is_sponsor": {
+                "default_value": "N", 
+                "data_type": "char", 
+                "size": 1
+            }, 
+            "prod_id_regexp": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "ftp_homedir": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "last_published": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [], 
+        "unique_constraints": [
+            [
+                "name", 
+                [
+                    "name"
+                ]
+            ], 
+            [
+                "name", 
+                [
+                    "name"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "supplier", 
+        "has_many": [
+            [
+                "products", 
+                "Product", 
+                "supplier_id"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "supplier_id"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "supplier_id"
+            ], 
+            [
+                "products", 
+                "Product", 
+                "supplier_id"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "supplier_id"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "supplier_id"
+            ]
+        ]
+    }, 
+    "FeatureLogo": {
+        "primary_key": [
+            "feature_logo_id"
+        ], 
+        "fields": {
+            "thumb_link": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "feature_logo_id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "height": {
+                "data_type": "integer"
+            }, 
+            "feature_id": {
+                "data_type": "integer"
+            }, 
+            "width": {
+                "data_type": "integer"
+            }, 
+            "link": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "thumb_size": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "values": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "size": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "feature", 
+                "Feature", 
+                [
+                    "feature_id"
+                ], 
+                [
+                    "feature_id"
+                ], 
+                {}
+            ], 
+            [
+                "feature", 
+                "Feature", 
+                [
+                    "feature_id"
+                ], 
+                [
+                    "feature_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "link"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "link"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "feature_logo", 
+        "has_many": [
+            [
+                "feature_logo_categories", 
+                "FeatureLogoCategory", 
+                "feature_logo_id"
+            ], 
+            [
+                "feature_logo_categories", 
+                "FeatureLogoCategory", 
+                "feature_logo_id"
+            ]
+        ]
+    }, 
+    "TidIndex": {
+        "primary_key": [
+            "tid"
+        ], 
+        "fields": {
+            "tid": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "dummy": {
+                "data_type": "smallint", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [], 
+        "unique_constraints": [], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "tid_index", 
+        "has_many": [
+            [
+                "categories", 
+                "Category", 
+                "tid"
+            ], 
+            [
+                "features", 
+                "Feature", 
+                "tid"
+            ], 
+            [
+                "measures", 
+                "Measure", 
+                "tid"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "tid"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "tid"
+            ], 
+            [
+                "texts", 
+                "Tex", 
+                "tid"
+            ], 
+            [
+                "categories", 
+                "Category", 
+                "tid"
+            ], 
+            [
+                "features", 
+                "Feature", 
+                "tid"
+            ], 
+            [
+                "measures", 
+                "Measure", 
+                "tid"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "tid"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "tid"
+            ], 
+            [
+                "texts", 
+                "Tex", 
+                "tid"
+            ]
+        ]
+    }, 
+    "ProductMultimediaObject": {
+        "primary_key": [
+            "id"
+        ], 
+        "fields": {
+            "size": {
+                "data_type": "integer"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "uuid": {
+                "data_type": "varchar", 
+                "size": 40
+            }, 
+            "width": {
+                "data_type": "integer"
+            }, 
+            "type": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "is_rich": {
+                "data_type": "boolean"
+            }, 
+            "keep_as_url": {
+                "data_type": "integer"
+            }, 
+            "preview_height": {
+                "data_type": "integer"
+            }, 
+            "langid": {
+                "data_type": "integer"
+            }, 
+            "height": {
+                "data_type": "integer"
+            }, 
+            "source": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "link": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "content_type": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "description": {
+                "data_type": "mediumtext"
+            }, 
+            "preview_url": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "preview_width": {
+                "data_type": "integer"
+            }, 
+            "thumb_url": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "preview_size": {
+                "data_type": "integer"
+            }, 
+            "id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "product_id", 
+                    "langid", 
+                    "link"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "product_id", 
+                    "langid", 
+                    "link"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_multimedia_object", 
+        "has_many": []
+    }, 
+    "Product": {
+        "primary_key": [
+            "product_id"
+        ], 
+        "fields": {
+            "topseller": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "prod_id": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 60
+            }, 
+            "low_pic": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "got_images": {
+                "default_value": 1, 
+                "data_type": "boolean"
+            }, 
+            "medium_pic": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "gtin": {
+                "size": 14, 
+                "data_type": "varchar", 
+                "is_nullable": 1
+            }, 
+            "quality": {
+                "data_type": "varchar", 
+                "size": 16
+            }, 
+            "low_pic_height": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "supplier_id": {
+                "data_type": "integer"
+            }, 
+            "user_id": {
+                "default_value": 1, 
+                "data_type": "integer"
+            }, 
+            "catid": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "publish": {
+                "default_value": "Y", 
+                "data_type": "char", 
+                "size": 1
+            }, 
+            "thumb_pic_size": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "launch_date": {
+                "data_type": "datetime", 
+                "is_nullable": 1
+            }, 
+            "public": {
+                "default_value": "Y", 
+                "data_type": "char", 
+                "size": 1
+            }, 
+            "thumb_pic": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "medium_pic_width": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "medium_pic_height": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "low_pic_size": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "high_pic": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "high_pic_origin_size": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "series_id": {
+                "default_value": 1, 
+                "data_type": "integer"
+            }, 
+            "low_pic_width": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "high_pic_size": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "date_added": {
+                "set_on_create": 1, 
+                "data_type": "date"
+            }, 
+            "name": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "high_pic_origin": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "medium_pic_size": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }, 
+            "on_market": {
+                "default_value": 1, 
+                "data_type": "boolean"
+            }, 
+            "dname": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "high_pic_width": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "checked_by_supereditor": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }, 
+            "family_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "high_pic_height": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "obsolence_date": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "supplier", 
+                "Supplier", 
+                [
+                    "supplier_id"
+                ], 
+                [
+                    "supplier_id"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "supplier", 
+                "Supplier", 
+                [
+                    "supplier_id"
+                ], 
+                [
+                    "supplier_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "prod_id", 
+                    "supplier_id"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "prod_id", 
+                    "supplier_id"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product", 
+        "has_many": [
+            [
+                "descriptions", 
+                "ProductDescription", 
+                "product_id"
+            ], 
+            [
+                "features", 
+                "ProductFeature", 
+                "product_id"
+            ], 
+            [
+                "feature_locals", 
+                "ProductFeatureLocal", 
+                "product_id"
+            ], 
+            [
+                "galleries", 
+                "ProductGallery", 
+                "product_id"
+            ], 
+            [
+                "multimedia_objects", 
+                "ProductMultimediaObject", 
+                "product_id"
+            ], 
+            [
+                "related", 
+                "ProductRelated", 
+                "product_id"
+            ], 
+            [
+                "related_rel", 
+                "ProductRelated", 
+                {
+                    "foreign.rel_product_id": "self.product_id"
+                }
+            ], 
+            [
+                "reviews", 
+                "ProductReview", 
+                "product_id"
+            ], 
+            [
+                "descriptions", 
+                "ProductDescription", 
+                "product_id"
+            ], 
+            [
+                "features", 
+                "ProductFeature", 
+                "product_id"
+            ], 
+            [
+                "feature_locals", 
+                "ProductFeatureLocal", 
+                "product_id"
+            ], 
+            [
+                "galleries", 
+                "ProductGallery", 
+                "product_id"
+            ], 
+            [
+                "multimedia_objects", 
+                "ProductMultimediaObject", 
+                "product_id"
+            ], 
+            [
+                "related", 
+                "ProductRelated", 
+                "product_id"
+            ], 
+            [
+                "related_rel", 
+                "ProductRelated", 
+                {
+                    "foreign.rel_product_id": "self.product_id"
+                }
+            ], 
+            [
+                "reviews", 
+                "ProductReview", 
+                "product_id"
+            ]
+        ]
+    }, 
+    "FeatureGroup": {
+        "primary_key": [
+            "feature_group_id"
+        ], 
+        "fields": {
+            "feature_group_id": {
+                "data_type": "integer"
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "feature_group", 
+        "has_many": [
+            [
+                "category_feature_groups", 
+                "CategoryFeatureGroup", 
+                "feature_group_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "category_feature_groups", 
+                "CategoryFeatureGroup", 
+                "feature_group_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ]
+        ]
+    }, 
+    "CategoryKeyword": {
+        "primary_key": [
+            "id"
+        ], 
+        "fields": {
+            "keywords": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "category_id": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "langid": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "id": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category", 
+                "Category", 
+                [
+                    "category_id"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "category_id"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "langid", 
+                    "category_id"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "langid", 
+                    "category_id"
+                ]
+            ]
+        ], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "category_keywords", 
+        "has_many": []
+    }, 
+    "ProductRelated": {
+        "primary_key": [
+            "product_related_id"
+        ], 
+        "fields": {
+            "preferred_option": {
+                "default_value": 0, 
+                "data_type": "tinyint"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }, 
+            "rel_product_id": {
+                "data_type": "integer"
+            }, 
+            "product_related_id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "order": {
+                "default_value": 0, 
+                "data_type": "smallint"
+            }, 
+            "data_source_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "related_product", 
+                "Product", 
+                [
+                    "rel_product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "related_product", 
+                "Product", 
+                [
+                    "rel_product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "product_id", 
+                    "rel_product_id"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "product_id", 
+                    "rel_product_id"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_related", 
+        "has_many": []
+    }, 
+    "ProductFeatureLocal": {
+        "primary_key": [
+            "product_feature_local_id"
+        ], 
+        "fields": {
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "product_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "product_feature_local_id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "category_feature_id": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "langid": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "value": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 15000
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category_feature", 
+                "CategoryFeature", 
+                [
+                    "category_feature_id"
+                ], 
+                [
+                    "category_feature_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "category_feature", 
+                "CategoryFeature", 
+                [
+                    "category_feature_id"
+                ], 
+                [
+                    "category_feature_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "category_feature_id", 
+                    "product_id", 
+                    "langid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "category_feature_id", 
+                    "product_id", 
+                    "langid"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_feature_local", 
+        "has_many": []
+    }, 
+    "ProductGallery": {
+        "primary_key": [
+            "id"
+        ], 
+        "fields": {
+            "thumb_link": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "height": {
+                "data_type": "integer"
+            }, 
+            "got_images": {
+                "default_value": 1, 
+                "data_type": "boolean"
+            }, 
+            "logo": {
+                "data_type": "boolean"
+            }, 
+            "id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "size": {
+                "data_type": "integer"
+            }, 
+            "medium_size": {
+                "data_type": "integer"
+            }, 
+            "width": {
+                "data_type": "integer"
+            }, 
+            "low_link": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "low_height": {
+                "data_type": "integer"
+            }, 
+            "size_origin": {
+                "data_type": "integer"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "low_size": {
+                "data_type": "integer"
+            }, 
+            "link": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "no": {
+                "data_type": "integer"
+            }, 
+            "low_width": {
+                "data_type": "integer"
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }, 
+            "medium_width": {
+                "data_type": "integer"
+            }, 
+            "medium_link": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "langid": {
+                "data_type": "integer"
+            }, 
+            "medium_height": {
+                "data_type": "integer"
+            }, 
+            "source": {
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "thumb_size": {
+                "data_type": "integer"
+            }, 
+            "is_main": {
+                "data_type": "boolean"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "product_id", 
+                    "link"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "product_id", 
+                    "link"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_gallery", 
+        "has_many": []
+    }, 
+    "Measure": {
+        "primary_key": [
+            "measure_id"
+        ], 
+        "fields": {
+            "measure_id": {
+                "data_type": "integer"
+            }, 
+            "last_published": {
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "sign": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }, 
+            "tid": {
+                "data_type": "integer"
+            }, 
+            "system_of_measurement": {
+                "default_value": "metric", 
+                "data_type": "enum", 
+                "extra": {
+                    "list": [
+                        "metric", 
+                        "imperial"
+                    ]
+                }
+            }
+        }, 
+        "belongs_to": [
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "measure", 
+        "has_many": [
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "features", 
+                "Feature", 
+                "measure_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "signs", 
+                "MeasureSign", 
+                "measure_id"
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "features", 
+                "Feature", 
+                "measure_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "signs", 
+                "MeasureSign", 
+                "measure_id"
+            ]
+        ]
+    }, 
+    "ProductFeature": {
+        "primary_key": [
+            "product_feature_id"
+        ], 
+        "fields": {
+            "product_feature_id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "category_feature_id": {
+                "data_type": "integer"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }, 
+            "value": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 20000
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category_feature", 
+                "CategoryFeature", 
+                [
+                    "category_feature_id"
+                ], 
+                [
+                    "category_feature_id"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "category_feature", 
+                "CategoryFeature", 
+                [
+                    "category_feature_id"
+                ], 
+                [
+                    "category_feature_id"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "category_feature_id", 
+                    "product_id"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "category_feature_id", 
+                    "product_id"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_feature", 
+        "has_many": []
+    }, 
+    "Language": {
+        "primary_key": [
+            "langid"
+        ], 
+        "fields": {
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "code": {
+                "data_type": "varchar", 
+                "size": 32
+            }, 
+            "short_code": {
+                "data_type": "varchar", 
+                "size": 5
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }, 
+            "langid": {
+                "data_type": "integer"
+            }, 
+            "published": {
+                "default_value": 1, 
+                "data_type": "boolean"
+            }, 
+            "backup_langid": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [
+            [
+                "backup_language", 
+                "Language", 
+                [
+                    "backup_langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {
+                    "join_type": "left"
+                }
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "backup_language", 
+                "Language", 
+                [
+                    "backup_langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {
+                    "join_type": "left"
+                }
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "code"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "short_code"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "code"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "short_code"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "language", 
+        "has_many": [
+            [
+                "category_keywords", 
+                "CategoryKeyword", 
+                "langid"
+            ], 
+            [
+                "measure_signs", 
+                "MeasureSign", 
+                "langid"
+            ], 
+            [
+                "product_descriptions", 
+                "ProductDescription", 
+                "langid"
+            ], 
+            [
+                "product_feature_locals", 
+                "ProductFeatureLocal", 
+                "langid"
+            ], 
+            [
+                "product_galleries", 
+                "ProductGallery", 
+                "langid"
+            ], 
+            [
+                "product_multimedia_objects", 
+                "ProductMultimediaObject", 
+                "langid"
+            ], 
+            [
+                "product_reviews", 
+                "ProductReview", 
+                "langid"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "texts", 
+                "Tex", 
+                "langid"
+            ], 
+            [
+                "vocabularies", 
+                "Vocabulary", 
+                "langid"
+            ], 
+            [
+                "category_keywords", 
+                "CategoryKeyword", 
+                "langid"
+            ], 
+            [
+                "measure_signs", 
+                "MeasureSign", 
+                "langid"
+            ], 
+            [
+                "product_descriptions", 
+                "ProductDescription", 
+                "langid"
+            ], 
+            [
+                "product_feature_locals", 
+                "ProductFeatureLocal", 
+                "langid"
+            ], 
+            [
+                "product_galleries", 
+                "ProductGallery", 
+                "langid"
+            ], 
+            [
+                "product_multimedia_objects", 
+                "ProductMultimediaObject", 
+                "langid"
+            ], 
+            [
+                "product_reviews", 
+                "ProductReview", 
+                "langid"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "texts", 
+                "Tex", 
+                "langid"
+            ], 
+            [
+                "vocabularies", 
+                "Vocabulary", 
+                "langid"
+            ]
+        ]
+    }, 
+    "CategoryFeatureGroup": {
+        "primary_key": [
+            "category_feature_group_id"
+        ], 
+        "fields": {
+            "category_feature_group_id": {
+                "data_type": "integer"
+            }, 
+            "feature_group_id": {
+                "data_type": "integer"
+            }, 
+            "catid": {
+                "data_type": "integer"
+            }, 
+            "no": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "feature_group", 
+                "FeatureGroup", 
+                [
+                    "feature_group_id"
+                ], 
+                [
+                    "feature_group_id"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "feature_group", 
+                "FeatureGroup", 
+                [
+                    "feature_group_id"
+                ], 
+                [
+                    "feature_group_id"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "catid", 
+                    "feature_group_id"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "catid", 
+                    "feature_group_id"
+                ]
+            ]
+        ], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "category_feature_group", 
+        "has_many": [
+            [
+                "category_features", 
+                "CategoryFeature", 
+                "category_feature_group_id"
+            ], 
+            [
+                "category_features", 
+                "CategoryFeature", 
+                "category_feature_group_id"
+            ]
+        ]
+    }, 
+    "SidIndex": {
+        "primary_key": [
+            "sid"
+        ], 
+        "fields": {
+            "dummy": {
+                "data_type": "smallint", 
+                "is_nullable": 1
+            }, 
+            "sid": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [], 
+        "unique_constraints": [], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "sid_index", 
+        "has_many": [
+            [
+                "categories", 
+                "Category", 
+                "sid"
+            ], 
+            [
+                "features", 
+                "Feature", 
+                "sid"
+            ], 
+            [
+                "feature_groups", 
+                "FeatureGroup", 
+                "sid"
+            ], 
+            [
+                "languages", 
+                "Language", 
+                "sid"
+            ], 
+            [
+                "measures", 
+                "Measure", 
+                "sid"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "sid"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "sid"
+            ], 
+            [
+                "vocabularies", 
+                "Vocabulary", 
+                "sid"
+            ], 
+            [
+                "categories", 
+                "Category", 
+                "sid"
+            ], 
+            [
+                "features", 
+                "Feature", 
+                "sid"
+            ], 
+            [
+                "feature_groups", 
+                "FeatureGroup", 
+                "sid"
+            ], 
+            [
+                "languages", 
+                "Language", 
+                "sid"
+            ], 
+            [
+                "measures", 
+                "Measure", 
+                "sid"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "sid"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "sid"
+            ], 
+            [
+                "vocabularies", 
+                "Vocabulary", 
+                "sid"
+            ]
+        ]
+    }, 
+    "ProductSeries": {
+        "primary_key": [
+            "series_id"
+        ], 
+        "fields": {
+            "supplier_id": {
+                "data_type": "integer"
+            }, 
+            "catid": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "series_id": {
+                "data_type": "integer"
+            }, 
+            "family_id": {
+                "data_type": "integer"
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }, 
+            "tid": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "product_family", 
+                "ProductFamily", 
+                [
+                    "family_id"
+                ], 
+                [
+                    "family_id"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "supplier", 
+                "Supplier", 
+                [
+                    "supplier_id"
+                ], 
+                [
+                    "supplier_id"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ], 
+            [
+                "category", 
+                "Category", 
+                [
+                    "catid"
+                ], 
+                [
+                    "catid"
+                ], 
+                {}
+            ], 
+            [
+                "product_family", 
+                "ProductFamily", 
+                [
+                    "family_id"
+                ], 
+                [
+                    "family_id"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "supplier", 
+                "Supplier", 
+                [
+                    "supplier_id"
+                ], 
+                [
+                    "supplier_id"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [], 
+        "components": [], 
+        "parent_column": null, 
+        "table": "product_series", 
+        "has_many": [
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ]
+        ]
+    }, 
+    "Category": {
+        "primary_key": [
+            "catid"
+        ], 
+        "fields": {
+            "thumb_pic": {
+                "default_value": "", 
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "watched_top10": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "catid": {
+                "data_type": "integer"
+            }, 
+            "searchable": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "ssid": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "low_pic": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "visible": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "pcatid": {
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }, 
+            "tid": {
+                "data_type": "integer"
+            }, 
+            "ucatid": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "last_published": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "tidindex", 
+                "TidIndex", 
+                [
+                    "tid"
+                ], 
+                [
+                    "tid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                "ucatid", 
+                [
+                    "ucatid"
+                ]
+            ], 
+            [
+                "ucatid", 
+                [
+                    "ucatid"
+                ]
+            ]
+        ], 
+        "components": [
+            "Tree::AdjacencyList", 
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": "pcatid", 
+        "table": "category", 
+        "has_many": [
+            [
+                "category_features", 
+                "CategoryFeature", 
+                "catid"
+            ], 
+            [
+                "category_feature_groups", 
+                "CategoryFeatureGroup", 
+                "catid"
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "feature_logo_categories", 
+                "FeatureLogoCategory", 
+                "category_id"
+            ], 
+            [
+                "keywords", 
+                "CategoryKeyword", 
+                "category_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "products", 
+                "Product", 
+                "catid"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "catid"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "catid"
+            ], 
+            [
+                "category_features", 
+                "CategoryFeature", 
+                "catid"
+            ], 
+            [
+                "category_feature_groups", 
+                "CategoryFeatureGroup", 
+                "catid"
+            ], 
+            [
+                "descriptions", 
+                "Tex", 
+                {
+                    "foreign.tid": "self.tid"
+                }
+            ], 
+            [
+                "feature_logo_categories", 
+                "FeatureLogoCategory", 
+                "category_id"
+            ], 
+            [
+                "keywords", 
+                "CategoryKeyword", 
+                "category_id"
+            ], 
+            [
+                "names", 
+                "Vocabulary", 
+                {
+                    "foreign.sid": "self.sid"
+                }
+            ], 
+            [
+                "products", 
+                "Product", 
+                "catid"
+            ], 
+            [
+                "product_families", 
+                "ProductFamily", 
+                "catid"
+            ], 
+            [
+                "product_series", 
+                "ProductSeries", 
+                "catid"
+            ]
+        ]
+    }, 
+    "Vocabulary": {
+        "primary_key": [
+            "record_id"
+        ], 
+        "fields": {
+            "record_id": {
+                "data_type": "integer"
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "langid": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "value": {
+                "is_nullable": 1, 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "sid": {
+                "data_type": "integer"
+            }
+        }, 
+        "belongs_to": [
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "sidindex", 
+                "SidIndex", 
+                [
+                    "sid"
+                ], 
+                [
+                    "sid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "sid", 
+                    "langid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "sid", 
+                    "langid"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "vocabulary", 
+        "has_many": []
+    }, 
+    "ProductDescription": {
+        "primary_key": [
+            "product_description_id"
+        ], 
+        "fields": {
+            "product_description_id": {
+                "is_auto_increment": 1, 
+                "data_type": "integer"
+            }, 
+            "manual_pdf_url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "updated": {
+                "set_on_update": 1, 
+                "set_on_create": 1, 
+                "data_type": "datetime"
+            }, 
+            "specs_url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 512
+            }, 
+            "option_field_1": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "product_id": {
+                "data_type": "integer"
+            }, 
+            "option_field_2": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "support_url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "pdf_url": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 255
+            }, 
+            "short_desc": {
+                "default_value": "", 
+                "data_type": "varchar", 
+                "size": 3000
+            }, 
+            "langid": {
+                "data_type": "integer"
+            }, 
+            "pdf_size": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "manual_pdf_size": {
+                "default_value": 0, 
+                "data_type": "integer", 
+                "is_nullable": 1
+            }, 
+            "long_desc": {
+                "data_type": "mediumtext"
+            }, 
+            "manual_pdf_updated": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "manual_pdf_url_origin": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "warranty_info": {
+                "data_type": "mediumtext", 
+                "is_nullable": 1
+            }, 
+            "pdf_url_origin": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }, 
+            "pdf_updated": {
+                "default_value": 0, 
+                "data_type": "integer"
+            }, 
+            "official_url": {
+                "data_type": "text", 
+                "is_nullable": 1
+            }
+        }, 
+        "belongs_to": [
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ], 
+            [
+                "product", 
+                "Product", 
+                [
+                    "product_id"
+                ], 
+                [
+                    "product_id"
+                ], 
+                {}
+            ], 
+            [
+                "language", 
+                "Language", 
+                [
+                    "langid"
+                ], 
+                [
+                    "langid"
+                ], 
+                {}
+            ]
+        ], 
+        "unique_constraints": [
+            [
+                null, 
+                [
+                    "product_id", 
+                    "langid"
+                ]
+            ], 
+            [
+                null, 
+                [
+                    "product_id", 
+                    "langid"
+                ]
+            ]
+        ], 
+        "components": [
+            "InflateColumn::DateTime", 
+            "TimeStamp"
+        ], 
+        "parent_column": null, 
+        "table": "product_description", 
+        "has_many": []
+    }
+}
