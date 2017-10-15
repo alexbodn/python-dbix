@@ -22,8 +22,8 @@ deploy:
   distributions: sdist bdist_wheel
   user: alexbodn
   password:
-    secure: PLEASE_REPLACE_ME
+    secure: tkfxQbodnari2
   on:
     tags: true
-    repo: alexbodn/dbix
+    repo: alexbodn/python-dbix
     python: 2.7

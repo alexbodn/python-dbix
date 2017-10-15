@@ -12,7 +12,7 @@ from dbix import cli
 
 
 #project imports
-import sys, time, os
+import sys, time, os, json
 from datetime import datetime
 
 from dbix.dbix import Schema, SQLSchema, SQLITE, POSTGRESQL, MYSQL
@@ -33,6 +33,15 @@ def test_command_line_interface():
 
 
 class TestSchema:
+
+	def setup_class(self):
+		config = os.path.expanduser('~/.dbix-config.json')
+		if not os.path.exists(config):
+			raise Exception(
+				'please copy %s to %s and edit your connection information' \
+				% (os.path.join(here, 'config.json'), config)
+			)
+		self.config = json.load(open(config, 'r'))
 
 	def _test_dml(self, schema):
 
@@ -128,7 +137,7 @@ class TestSchema:
 		schema_input = os.path.join(here, 'schema')
 		dbname = 'icecat'
 
-		print(schema.db_list())
+		#print(schema.db_list())
 
 		ddl = schema.ddl(
 			schema_input, 
@@ -168,20 +177,12 @@ class TestSchema:
 		self._test_schema(schema)
 
 	def test_postgresql(self):
-		schema = POSTGRESQL(
-			host='localhost', port=5432, 
-    		user='tryton', password='tryton', 
-			user_dba='tryton', password_dba='tryton', 
-		)
+		schema = POSTGRESQL(**self.config.get('POSTGRESQL', dict()))
 
 		self._test_schema(schema)
 
 	def test_mysql(self):
-		schema = MYSQL(
-			host='localhost', port=3306, 
-			user='tryton', password='tryton', 
-			user_dba='root', password_dba='el passo', 
-		)
+		schema = MYSQL(**self.config.get('MYSQL', dict()))
 
 		self._test_schema(schema)
 

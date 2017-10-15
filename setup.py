@@ -13,6 +13,8 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
+    'MySQLDb',
+    'psycopg2',
     # TODO: put package requirements here
 ]
 
@@ -46,7 +48,7 @@ setup(
     zip_safe=False,
     keywords='dbix',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
