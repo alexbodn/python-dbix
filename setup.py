@@ -13,7 +13,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
-    'MySQLDb',
+    'MySQL-python',
     'psycopg2',
     # TODO: put package requirements here
 ]
