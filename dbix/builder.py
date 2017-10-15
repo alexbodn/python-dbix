@@ -100,3 +100,8 @@ class BuilderMixin(object):
 		cls.register()
 		cls.schema.entities[cls.__name__]['parent_column'] = name
 
+	@classmethod
+	# it is assumed that the schema creator has checked it in the perl code
+	def schema_sanity_checker(cls, *args):
+		return True
+

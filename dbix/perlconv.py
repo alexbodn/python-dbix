@@ -5,6 +5,7 @@ import os, sys, re
 
 header = """
 from dbix import builder
+
 """
 
 footer = ''
@@ -15,6 +16,8 @@ re_comment_tag = re.compile(ur"^=\S+", re.UNICODE|re.MULTILINE)
 re_use = re.compile(ur'^use.+$', re.UNICODE|re.MULTILINE)
 re_our = re.compile(ur'^our\s+\$(.+?);$', re.UNICODE|re.MULTILINE)
 re_my = re.compile(ur'^my\s+(.+?)$', re.UNICODE|re.MULTILINE)
+re_if = re.compile(ur'^\s*if\s+(.+?);', re.UNICODE|re.MULTILINE)
+re_qw = re.compile(ur'qw\s*\((.+?)\)', re.UNICODE|re.MULTILINE)
 re_package = re.compile(
 	ur'^package\s+(?P<package_name>.+?);$', re.UNICODE|re.MULTILINE)
 re_package_invoke = re.compile(ur'__PACKAGE__\s*->\s*', re.UNICODE|re.MULTILINE)
@@ -32,7 +35,7 @@ re_dict_end = re.compile(ur'}', re.UNICODE|re.MULTILINE)
 re_add_columns = re.compile(ur'add_columns\s*?\(', re.UNICODE|re.DOTALL)
 re_add_columns_only = re.compile(ur'\b(add_columns\()', re.UNICODE)
 re_fix_kw = re.compile(
-	ur"""(?P<func>has_many|belongs_to)\s*\(\s*(?P<variable>\S+)\s*=\s*"(?P<cls>.*?)"\s*,(?P<rem>.*?)\);""", 
+	ur"""(?P<func>has_many|belongs_to)\s*\(\s*['"]?(?P<variable>\S+?)['"]?\s*=\s*['"]?(?P<cls>.*?)['"]?\s*,(?P<rem>.*?)\);""", 
 	re.UNICODE|re.DOTALL)
 re_class_strip = re.compile(ur'Icecat::Schema::Result::', re.UNICODE|re.MULTILINE)
 re_class_strip1 = re.compile(ur'Icecat_Schema_Result_', re.UNICODE|re.MULTILINE)
@@ -74,11 +77,19 @@ def perlconvert(sourcepath, text, with_dict=False, in_tree=0):
 			text, add_columns_par, re_add_columns_only, add_dict=True)
 
 	text = re.sub(re_my, u'\g<1>', text)
+	text = re.sub(re_if, u'', text)
+	text = re.sub(re_qw, qw_sub, text)
 	text = re.sub(re_fix_kw, fix_kw, text)
 	text = re.sub(re_class_strip, u'', text)
 	text = re.sub(re_class_strip1, u'', text)
 
 	return text + '\n' + footer
+
+
+def qw_sub(matchObj):
+	return ', '.join([
+		'"%s"' % word.replace('"', '\"') for word in matchObj.group(1).split()
+	])
 
 
 def dict_parse(text, dict_par, spliter, add_dict=False):
@@ -245,7 +256,7 @@ def class_build(matchObj):
 
 def fix_kw(matchObj):
 	rep = dict(matchObj.groupdict())
-	rep['cls'] = '_'.join([part.strip() for part in rep['cls'].split('::')])
+	rep['cls'] = [part.strip() for part in rep['cls'].split('::')][-1]
 	text = u"""%(func)s(\n'%(variable)s', "%(cls)s",%(rem)s)""" % rep
 	return text
 

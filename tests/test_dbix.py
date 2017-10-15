@@ -132,20 +132,14 @@ class TestSchema:
 		assert c == 1
 
 
-	def _test_schema(self, schema):
+	def _do_test_schema(self, schema):
 
 		schema_input = os.path.join(here, 'schema')
 		dbname = 'icecat'
 
-		#print(schema.db_list())
+		schema.init()
 
-		ddl = schema.ddl(
-			schema_input, 
-			#with_fk=False, 
-			#only_tables=['MeasureSign']
-		)
-		ddl_ext = schema.dump_extension
-		open(os.path.join(here, 'dumps/%s%s' % (dbname, ddl_ext)), 'wb').write(ddl)
+		#print(schema.db_list())
 
 		schema.db_drop(dbname)
 		schema.db_create(dbname)
@@ -158,6 +152,14 @@ class TestSchema:
 			#only_tables=['MeasureSign']
 		)
 
+		ddl = schema.ddl(
+			schema_input, 
+			#with_fk=False, 
+			#only_tables=['MeasureSign']
+		)
+		ddl_ext = schema.dump_extension
+		open(os.path.join(here, 'dumps/%s%s' % (dbname, ddl_ext)), 'wb').write(ddl)
+
 		if isinstance(schema, SQLSchema) and 0:
 			_test_dml(schema)
 
@@ -166,30 +168,63 @@ class TestSchema:
 		schema.db_disconnect()
 
 
-	def test_schema(self):
+	def _do_test_schema_small(self, schema):
+
+		schema_input = os.path.join(here, 'example')
+		dbname = 'myapp'
+
+		schema.init()
+
+		schema.db_drop(dbname)
+		schema.db_create(dbname)
+
+		schema.db_connect(dbname)
+
+		schema.load_ddl(
+			schema_input, 
+			#with_fk=False, 
+			#only_tables=['MeasureSign']
+		)
+
+		ddl = schema.ddl(
+			schema_input, 
+			#with_fk=False, 
+			#only_tables=['MeasureSign']
+		)
+		ddl_ext = schema.dump_extension
+		open(os.path.join(here, 'dumps/%s%s' % (dbname, ddl_ext)), 'wb').write(ddl)
+
+		schema.db_disconnect()
+
+
+	def _test_schema(self):
 		schema = Schema()
 
-		self._test_schema(schema)
+		#self._do_test_schema(schema)
+		self._do_test_schema_small(schema)
 
 	def test_sqlite(self):
 		schema = SQLITE(path=os.path.join(here, 'data'))
 
-		self._test_schema(schema)
+		self._do_test_schema(schema)
+		self._do_test_schema_small(schema)
 
-	def test_postgresql(self):
+	def _test_postgresql(self):
 		schema = POSTGRESQL(**self.config.get('POSTGRESQL', dict()))
 
-		self._test_schema(schema)
+		self._do_test_schema(schema)
+		self._do_test_schema_small(schema)
 
-	def test_mysql(self):
+	def _test_mysql(self):
 		schema = MYSQL(**self.config.get('MYSQL', dict()))
 
-		self._test_schema(schema)
+		self._do_test_schema(schema)
+		self._do_test_schema_small(schema)
 
 
 if __name__ == '__main__':
 
 	test_schema()
-	test_sqlite()
-	test_postgresql()
-	test_mysql()
+	#test_sqlite()
+	#test_postgresql()
+	#test_mysql()
