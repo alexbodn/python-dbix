@@ -6,7 +6,7 @@ import psycopg2
 
 class POSTGRESQL(SQLSchema):
 
-	type_conv = dict(
+	_type_conv = dict(
 		enum='varchar', 
 		boolean='integer', 
 		datetime='timestamp', 
@@ -16,9 +16,9 @@ class POSTGRESQL(SQLSchema):
 
 	getdate_all = "current_timestamp"
 	getdate = dict(
-		timestamp="CURRENT_TIMESTAMP",
-		date="CURRENT_DATE",
-		time="CURRENT_TIME",
+		timestamp="CURRENT_TIMESTAMP at time zone 'utc'",
+		date="CURRENT_DATE at time zone 'utc'",
+		time="CURRENT_TIME at time zone 'utc'",
 	)
 
 	render_paramplace = '%s'

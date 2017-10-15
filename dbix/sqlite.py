@@ -7,7 +7,7 @@ import os
 
 class SQLITE(SQLSchema):
 
-	type_conv = dict(
+	_type_conv = dict(
 		enum='varchar', 
 		boolean='integer', 
 		datetime='timestamp', 

@@ -88,11 +88,13 @@ class SQLResultSet(ResultSet):
 		pk = self.entity['primary_key']
 		len_pk = len(pk)
 		args = [
-			list(arg) for arg in args \
-			if len(arg) == len_pk and isinstance(arg, (list, tuple))
+			(list(arg) if isinstance(arg, (list, tuple)) else [arg]) \
+			for arg in args \
+			if len_pk == 1 or \
+				isinstance(arg, (list, tuple)) and len(arg) == len_pk
 		]
 		if args:
-			if len(pk) > 1:
+			if len_pk > 1:
 				one_rec = u' and '.join([
 					u'%s=%s' % (
 						self.schema.render_name(field), 
@@ -162,7 +164,7 @@ class SQLSchema(Schema):
 
 	dump_extension = '.sql'
 
-	type_conv = dict()
+	_type_conv = dict()
 	connection = None
 	inline_domains = False
 	default_delimiter = ";"
@@ -240,6 +242,13 @@ class SQLSchema(Schema):
 	def render_concat(left, right):
 		return '%s || %s' % (left, right)
 
+	def type_conv(self, attrs, entity, name):
+		data_type = self._type_conv.get(
+			(attrs['data_type'], name), 
+			self._type_conv.get(attrs['data_type'], attrs['data_type'])
+		)
+		return data_type
+
 	def render_default(self):
 		return ' default (%(default_value)s)'
 
@@ -262,16 +271,9 @@ class SQLSchema(Schema):
 			attrs, entity, name)
 
 		if 'data_type' not in attrs:
-			print(
-				'no data type for %s.%s' % (name, entity['table']), 
-				file=sys.stderr
-			)
-			return u''
+			raise Exception('no data type for %s.%s' % (name, entity['table']))
 
-		attrs['data_type'] = self.type_conv.get(
-			(attrs['data_type'], name), 
-			self.type_conv.get(attrs['data_type'], attrs['data_type'])
-		)
+		attrs['data_type'] = self.type_conv(attrs, entity, name)
 		_type_render = self.type_render[attrs['data_type']]
 		_type_render = getattr(self, _type_render)
 
@@ -294,7 +296,7 @@ class SQLSchema(Schema):
 		if 'size' in attrs:
 			res += '(%(size)d)'
 
-		getdate = self.getdate.get(attrs['data_type'], '')
+		getdate = self.getdate.get(attrs['data_type'], u'')
 		params = dict(
 			field=name, 
 			getdate=getdate, 
@@ -303,10 +305,7 @@ class SQLSchema(Schema):
 			default_delimiter=self.default_delimiter, 
 		)
 
-		inline_timestamps = \
-			self.inline_timestamps is True or name in self.inline_timestamps
-
-		if 'set_on_create' in attrs:
+		if 'set_on_create' in attrs and name not in entity['primary_key']:
 			trigger_actions = dict()
 			trigger_templates = dict()
 			triggers = list()
@@ -326,7 +325,7 @@ class SQLSchema(Schema):
 				trigger_templates[(stage, 'insert')] = text % params
 			if getattr(self, 'on_create_trigger', None):
 				triggers.append(self.on_create_trigger % params)
-			if getattr(self, 'oncreate_inline', None) and inline_timestamps:
+			if getattr(self, 'oncreate_inline', '') and self.inline_timestamps:
 				attrs['default_rendered'] = True
 				attrs['default_value'] = self.getdate[attrs['data_type']]
 			else:
@@ -347,7 +346,7 @@ class SQLSchema(Schema):
 				res += ' not'
 			res += ' null'
 
-		if 'set_on_update' in attrs:
+		if 'set_on_update' in attrs and name not in entity['primary_key']:
 			trigger_actions = dict()
 			trigger_templates = dict()
 			triggers = list()
@@ -384,7 +383,7 @@ class SQLSchema(Schema):
 				trigger_templates[(stage, 'update')] = text % params
 			if getattr(self, 'on_update_trigger', None):
 				triggers.append(self.on_update_trigger % params)
-			if getattr(self, 'onupdate_inline', None) and inline_timestamps:
+			if getattr(self, 'onupdate_inline', '') and self.inline_timestamps:
 				res += self.onupdate_inline % params
 			else:
 				for event, action in trigger_actions.iteritems():
@@ -512,8 +511,6 @@ class SQLSchema(Schema):
 
 
 	def ddl(self, pm_location, prefix='\t', only_tables=None, with_fk=True):
-		super(SQLSchema, self).load_ddl(
-			pm_location, only_tables=only_tables, with_fk=with_fk)
 		entities = self.ddl_list(
 			prefix=prefix, only_tables=only_tables, with_fk=with_fk)
 

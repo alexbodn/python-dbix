@@ -97,7 +97,7 @@ class ResultSet(object):
 		elif 'default_value' in entityfield:
 			value = entityfield['default_value']
 		elif entityfield.get('set_on_create'):
-			value = datetime.now()
+			value = datetime.utcnow()
 			if data_type in ('date', 'time'):
 				value = getattr(value, data_type)()
 		auto_increment = \
@@ -179,7 +179,7 @@ class ResultSet(object):
 				entityfield = self.entity['fields'][field]
 				if field not in kw and entityfield.get('set_on_update'):
 					data_type = entityfield['data_type']
-					kw[field] = datetime.now()
+					kw[field] = datetime.utcnow()
 					if data_type in ('date', 'time'):
 						kw[field] = getattr(kw[field], data_type)()
 				if field in kw:

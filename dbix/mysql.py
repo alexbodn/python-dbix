@@ -8,11 +8,10 @@ import MySQLdb as mysqldb
 class MYSQL(SQLSchema):
 
 	inline_domains = True
-	inline_timestamps = set(['updated'])
+	inline_timestamps = False
 
-	type_conv = {
-		('datetime', 'updated'): 'timestamp', 
-#		'datetime': 'datetime(6)', 
+	_type_conv = {
+		'datetime': 'timestamp', 
 	}
 
 	getdate = {
@@ -78,6 +77,7 @@ class MYSQL(SQLSchema):
 
 	table_sufix = "ENGINE=MyISAM"
 
+
 	@staticmethod
 	def render_number(value):
 		return u"'%s'" % value
@@ -98,6 +98,19 @@ class MYSQL(SQLSchema):
 		if attrs.get('is_auto_increment'):
 			return attrs, 'AUTO_INCREMENT'
 		return attrs, ''
+
+	def type_conv(self, attrs, entity, name):
+		data_type = super(MYSQL, self).type_conv(attrs, entity, name)
+		timestamp_attrs = ('set_on_create', 'set_on_update')
+		if 1 in [attrs.get(parm, 0) for parm in timestamp_attrs]:
+			if 'hastimestamps' in entity:
+				if data_type == 'timestamp':
+					data_type = 'datetime'
+				self.inline_timestamps = False
+			else:
+				entity['hastimestamps'] = 1
+				self.inline_timestamps = True
+		return data_type
 
 	def __init__(self, **connectparams):
 		super(MYSQL, self).__init__()
@@ -169,7 +182,6 @@ class MYSQL(SQLSchema):
 			self.dbname = dbname
 			return True
 		except:
-			raise
 			self.connection = None
 			self.dbname = None
 			return False
