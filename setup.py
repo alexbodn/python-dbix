@@ -30,7 +30,7 @@ test_requirements = [
 
 setup(
     name='dbix',
-    version='0.1.1',
+    version='0.1.2',
     description="load a perl DBIx::Class schema with python",
     long_description=readme + '\n\n' + history,
     author="Alex Bodnaru",
