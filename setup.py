@@ -13,8 +13,6 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
-    'MySQL-python',
-    'psycopg2',
     # TODO: put package requirements here
 ]
 
@@ -25,12 +23,14 @@ setup_requirements = [
 
 test_requirements = [
     'pytest',
+    'MySQL-python',
+    'psycopg2',
     # TODO: put package test requirements here
 ]
 
 setup(
     name='dbix',
-    version='0.1.0',
+    version='0.1.1',
     description="load a perl DBIx::Class schema with python",
     long_description=readme + '\n\n' + history,
     author="Alex Bodnaru",

@@ -37,8 +37,6 @@ re_add_columns_only = re.compile(ur'\b(add_columns\()', re.UNICODE)
 re_fix_kw = re.compile(
 	ur"""(?P<func>has_many|belongs_to)\s*\(\s*['"]?(?P<variable>\S+?)['"]?\s*=\s*['"]?(?P<cls>.*?)['"]?\s*,(?P<rem>.*?)\);""", 
 	re.UNICODE|re.DOTALL)
-re_class_strip = re.compile(ur'Icecat::Schema::Result::', re.UNICODE|re.MULTILINE)
-re_class_strip1 = re.compile(ur'Icecat_Schema_Result_', re.UNICODE|re.MULTILINE)
 
 re_string_quoted = re.compile(ur'"(?:\\.|[^"\\])*"', re.UNICODE|re.DOTALL)
 re_string_aposed = re.compile(ur"'(?:\\.|[^'\\])*'", re.UNICODE|re.DOTALL)
@@ -80,8 +78,6 @@ def perlconvert(sourcepath, text, with_dict=False, in_tree=0):
 	text = re.sub(re_if, u'', text)
 	text = re.sub(re_qw, qw_sub, text)
 	text = re.sub(re_fix_kw, fix_kw, text)
-	text = re.sub(re_class_strip, u'', text)
-	text = re.sub(re_class_strip1, u'', text)
 
 	return text + '\n' + footer
 
@@ -240,10 +236,8 @@ def clean_comment(matchObj):
 
 def class_build(matchObj):
 	text = matchObj.group('package_name')
-	parts = [part.strip() for part in text.split('::')]
 	global cls, footer, __sourcepath__
-#	cls = '_'.join(parts)
-	cls = parts[-1]
+	cls = text.split('::')[-1].strip()
 	text = u"""class %s(builder.BuilderMixin):
 	__name__ = '%s'
 	__sourcepath__ = '%s'
@@ -256,7 +250,7 @@ def class_build(matchObj):
 
 def fix_kw(matchObj):
 	rep = dict(matchObj.groupdict())
-	rep['cls'] = [part.strip() for part in rep['cls'].split('::')][-1]
+	rep['cls'] = rep['cls'].split('::')[-1].strip()
 	text = u"""%(func)s(\n'%(variable)s', "%(cls)s",%(rem)s)""" % rep
 	return text
 

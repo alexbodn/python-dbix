@@ -157,8 +157,8 @@ class TestSchema:
 			#with_fk=False, 
 			#only_tables=['MeasureSign']
 		)
-		ddl_ext = schema.dump_extension
-		open(os.path.join(here, 'dumps/%s%s' % (dbname, ddl_ext)), 'wb').write(ddl)
+		ddl_file = dbname + schema.dump_extension
+		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
 
 		if isinstance(schema, SQLSchema) and 0:
 			_test_dml(schema)
@@ -191,16 +191,16 @@ class TestSchema:
 			#with_fk=False, 
 			#only_tables=['MeasureSign']
 		)
-		ddl_ext = schema.dump_extension
-		open(os.path.join(here, 'dumps/%s%s' % (dbname, ddl_ext)), 'wb').write(ddl)
+		ddl_file = dbname + schema.dump_extension
+		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
 
 		schema.db_disconnect()
 
 
-	def _test_schema(self):
+	def test_schema(self):
 		schema = Schema()
 
-		#self._do_test_schema(schema)
+		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
 	def test_sqlite(self):
@@ -209,13 +209,13 @@ class TestSchema:
 		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
-	def _test_postgresql(self):
+	def test_postgresql(self):
 		schema = POSTGRESQL(**self.config.get('POSTGRESQL', dict()))
 
 		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
-	def _test_mysql(self):
+	def test_mysql(self):
 		schema = MYSQL(**self.config.get('MYSQL', dict()))
 
 		self._do_test_schema(schema)
