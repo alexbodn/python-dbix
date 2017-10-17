@@ -41,7 +41,6 @@ def test_command_line_interface():
 class TestSchema:
 
 	config = dict()
-	remote_dbs = True
 
 	def setup_class(self):
 		config = os.path.expanduser('~/.dbix-config.json')
@@ -51,7 +50,6 @@ class TestSchema:
 				"please copy %s to %s and edit your connection information" % (
 					os.path.join(here, 'config.json'), config)
 			)
-			self.remote_dbs = False
 		else:
 			self.config = json.load(open(config, 'r'))
 
@@ -225,29 +223,24 @@ class TestSchema:
 		self._do_test_schema_small(schema)
 
 	def test_postgresql(self):
-		if not self.remote_dbs:
+		config = self.config.get('POSTGRESQL')
+		if not config:
 			global report
-			report.append("postgresql test not run")
+			report.append("no configuration for postgresql")
 			return
-		schema = POSTGRESQL(**self.config.get('POSTGRESQL', dict()))
+		schema = POSTGRESQL(**config)
 
 		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
 	def test_mysql(self):
-		if not self.remote_dbs:
+		config = self.config.get('MYSQL')
+		if not config:
 			global report
-			report.append("mysql test not run")
+			report.append("no configuration for mysql")
 			return
-		schema = MYSQL(**self.config.get('MYSQL', dict()))
+		schema = MYSQL(**config)
 
 		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
-
-if __name__ == '__main__':
-
-	test_schema()
-	#test_sqlite()
-	#test_postgresql()
-	#test_mysql()

@@ -1,4 +1,5 @@
 {
+	"remove unused sections": 1,
 	"POSTGRESQL": {
 		"host": "localhost", 
 		"port": 5432, 
