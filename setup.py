@@ -13,19 +13,17 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
-    # TODO: put package requirements here
 ]
 
 setup_requirements = [
     'pytest-runner',
-    # TODO(alexbodn): put setup requirements (distutils extensions, etc.) here
 ]
 
 test_requirements = [
     'pytest',
     'MySQL-python',
     'psycopg2',
-    # TODO: put package test requirements here
+#    'blablablablabla',
 ]
 
 setup(
