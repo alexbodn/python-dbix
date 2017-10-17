@@ -33,7 +33,7 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Alex Bodnaru",
     author_email='alexbodn@gmail.com',
-    url='https://github.com/alexbodn/dbix',
+    url='https://github.com/alexbodn/python-dbix',
     packages=find_packages(include=['dbix']),
     entry_points={
         'console_scripts': [
