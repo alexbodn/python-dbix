@@ -12,13 +12,19 @@ from dbix import cli
 
 
 #project imports
-import sys, time, os, json
+import sys, time, os, json, atexit
 from datetime import datetime
 
 from dbix.dbix import Schema, SQLSchema, SQLITE, POSTGRESQL, MYSQL
 
 
 here = os.path.abspath(os.path.dirname(__file__))
+
+report = list()
+
+def show_report():
+	if report:
+		print('\n'.join(report))
 
 
 def test_command_line_interface():
@@ -34,14 +40,23 @@ def test_command_line_interface():
 
 class TestSchema:
 
+	config = dict()
+	remote_dbs = True
+
 	def setup_class(self):
 		config = os.path.expanduser('~/.dbix-config.json')
 		if not os.path.exists(config):
-			raise Exception(
-				'please copy %s to %s and edit your connection information' \
-				% (os.path.join(here, 'config.json'), config)
+			global report
+			report.append(
+				"please copy %s to %s and edit your connection information" % (
+					os.path.join(here, 'config.json'), config)
 			)
-		self.config = json.load(open(config, 'r'))
+			self.remote_dbs = False
+		else:
+			self.config = json.load(open(config, 'r'))
+
+		if sys.stdout != sys.__stdout__:
+			atexit.register(show_report)
 
 	def _test_dml(self, schema):
 
@@ -210,12 +225,20 @@ class TestSchema:
 		self._do_test_schema_small(schema)
 
 	def test_postgresql(self):
+		if not self.remote_dbs:
+			global report
+			report.append("postgresql test not run")
+			return
 		schema = POSTGRESQL(**self.config.get('POSTGRESQL', dict()))
 
 		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
 	def test_mysql(self):
+		if not self.remote_dbs:
+			global report
+			report.append("mysql test not run")
+			return
 		schema = MYSQL(**self.config.get('MYSQL', dict()))
 
 		self._do_test_schema(schema)
