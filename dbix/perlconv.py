@@ -11,42 +11,42 @@ from dbix import builder
 footer = ''
 
 re_comment = re.compile(
-	ur"""(?P<nl>[\r\n])=\S+(?P<comment>.*?)\n=cut""", re.UNICODE|re.DOTALL)
-re_comment_tag = re.compile(ur"^=\S+", re.UNICODE|re.MULTILINE)
-re_use = re.compile(ur'^use.+$', re.UNICODE|re.MULTILINE)
-re_our = re.compile(ur'^our\s+\$(.+?);$', re.UNICODE|re.MULTILINE)
-re_my = re.compile(ur'^my\s+(.+?)$', re.UNICODE|re.MULTILINE)
-re_if = re.compile(ur'^\s*if\s+(.+?);', re.UNICODE|re.MULTILINE)
-re_qw = re.compile(ur'qw\s*\((.+?)\)', re.UNICODE|re.MULTILINE)
+	r"""(?P<nl>[\r\n])=\S+(?P<comment>.*?)\n=cut""", re.UNICODE|re.DOTALL)
+re_comment_tag = re.compile(r"^=\S+", re.UNICODE|re.MULTILINE)
+re_use = re.compile(r'^use.+$', re.UNICODE|re.MULTILINE)
+re_our = re.compile(r'^our\s+\$(.+?);$', re.UNICODE|re.MULTILINE)
+re_my = re.compile(r'^my\s+(.+?)$', re.UNICODE|re.MULTILINE)
+re_if = re.compile(r'^\s*if\s+(.+?);', re.UNICODE|re.MULTILINE)
+re_qw = re.compile(r'qw\s*\((.+?)\)', re.UNICODE|re.MULTILINE)
 re_package = re.compile(
-	ur'^package\s+(?P<package_name>.+?);$', re.UNICODE|re.MULTILINE)
-re_package_invoke = re.compile(ur'__PACKAGE__\s*->\s*', re.UNICODE|re.MULTILINE)
-re_one = re.compile(ur'^\d\s*;\s*$', re.UNICODE|re.MULTILINE)
-re_member = re.compile(ur'=>', re.UNICODE|re.MULTILINE)
-re_funcref = re.compile(ur'\\\&(\S+)', re.UNICODE|re.MULTILINE)
-re_array = re.compile(ur'@(\S+)', re.UNICODE|re.MULTILINE)
-re_hash = re.compile(ur'%(\S+)', re.UNICODE|re.MULTILINE)
-#re_dict = re.compile(ur'\bdict\b', re.UNICODE)
-re_dict_only = re.compile(ur'\b(dict\()', re.UNICODE)
-re_dict_start = re.compile(ur'{', re.UNICODE|re.MULTILINE)
+	r'^package\s+(?P<package_name>.+?);$', re.UNICODE|re.MULTILINE)
+re_package_invoke = re.compile(r'__PACKAGE__\s*->\s*', re.UNICODE|re.MULTILINE)
+re_one = re.compile(r'^\d\s*;\s*$', re.UNICODE|re.MULTILINE)
+re_member = re.compile(r'=>', re.UNICODE|re.MULTILINE)
+re_funcref = re.compile(r'\\\&(\S+)', re.UNICODE|re.MULTILINE)
+re_array = re.compile(r'@(\S+)', re.UNICODE|re.MULTILINE)
+re_hash = re.compile(r'%(\S+)', re.UNICODE|re.MULTILINE)
+#re_dict = re.compile(r'\bdict\b', re.UNICODE)
+re_dict_only = re.compile(r'\b(dict\()', re.UNICODE)
+re_dict_start = re.compile(r'{', re.UNICODE|re.MULTILINE)
 dict_par = u'dict('
 add_columns_par = u'add_columns('
-re_dict_end = re.compile(ur'}', re.UNICODE|re.MULTILINE)
-re_add_columns = re.compile(ur'add_columns\s*?\(', re.UNICODE|re.DOTALL)
-re_add_columns_only = re.compile(ur'\b(add_columns\()', re.UNICODE)
+re_dict_end = re.compile(r'}', re.UNICODE|re.MULTILINE)
+re_add_columns = re.compile(r'add_columns\s*?\(', re.UNICODE|re.DOTALL)
+re_add_columns_only = re.compile(r'\b(add_columns\()', re.UNICODE)
 re_fix_kw = re.compile(
-	ur"""(?P<func>has_many|belongs_to)\s*\(\s*['"]?(?P<variable>\S+?)['"]?\s*=\s*['"]?(?P<cls>.*?)['"]?\s*,(?P<rem>.*?)\);""", 
+	r"""(?P<func>has_many|belongs_to)\s*\(\s*['"]?(?P<variable>\S+?)['"]?\s*=\s*['"]?(?P<cls>.*?)['"]?\s*,(?P<rem>.*?)\);""", 
 	re.UNICODE|re.DOTALL)
 
-re_string_quoted = re.compile(ur'"(?:\\.|[^"\\])*"', re.UNICODE|re.DOTALL)
-re_string_aposed = re.compile(ur"'(?:\\.|[^'\\])*'", re.UNICODE|re.DOTALL)
-re_string_id = re.compile(ur'[a-z_A-Z][a-z_A-Z0-9]*', re.UNICODE|re.DOTALL)
-re_string_expr = re.compile(ur'[^=,)]+?', re.UNICODE|re.DOTALL)
+re_string_quoted = re.compile(r'"(?:\\.|[^"\\])*"', re.UNICODE|re.DOTALL)
+re_string_aposed = re.compile(r"'(?:\\.|[^'\\])*'", re.UNICODE|re.DOTALL)
+re_string_id = re.compile(r'[a-z_A-Z][a-z_A-Z0-9]*', re.UNICODE|re.DOTALL)
+re_string_expr = re.compile(r'[^=,)]+?', re.UNICODE|re.DOTALL)
 
 saved_words = ['class', 'type']
 
 #re_saved_words = dict([
-#	(word, re.compile(ur'\b%s\b' % word, re.UNICODE)) for word in saved_words
+#	(word, re.compile(r'\b%s\b' % word, re.UNICODE)) for word in saved_words
 #])
 
 cls = None
