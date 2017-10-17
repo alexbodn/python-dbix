@@ -53,6 +53,13 @@ class TestSchema:
 		else:
 			self.config = json.load(open(config, 'r'))
 
+		for path in 'data', 'dumps':
+			path = os.path.join(here, path)
+			if not os.path.isdir(path):
+				if os.path.exists(path):
+					os.unlink(path)
+				os.mkdir(path)
+
 		if sys.stdout != sys.__stdout__:
 			atexit.register(show_report)
 
