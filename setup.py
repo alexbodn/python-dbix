@@ -13,6 +13,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
+    'future',
 ]
 
 setup_requirements = [
@@ -21,9 +22,6 @@ setup_requirements = [
 
 test_requirements = [
     'pytest',
-    'MySQL-python',
-    'psycopg2',
-#    'blablablablabla',
 ]
 
 setup(
