@@ -204,17 +204,26 @@ class ResultSet(object):
 		return self
 
 
-	def next(self):
-		key = self.iterator.next()
-		record = self.data[key]
-		select = [record[c] for c in self.select_columns_ix]
+	def do_next(self, select):
 		if self.dict_record:
 			return dict(zip(self.select_columns, select))
-		return tuple(select)
+		return select
+
+
+	def do_next_key(self, key):
+		record = self.data[key]
+		select = tuple([record[c] for c in self.select_columns_ix])
+		return self.do_next(select)
+
+
+	def next(self):
+		key = self.iterator.next()
+		return self.do_next_key(key)
 
 
 	def __next__(self):
-		return self.next()
+		key = self.iterator.__next__()
+		return self.do_next_key(key)
 
 
 	def get_description(self):

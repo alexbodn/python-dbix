@@ -151,9 +151,11 @@ class SQLResultSet(ResultSet):
 
 	def next(self):
 		select = self.iterator.next()
-		if self.dict_record:
-			return dict(zip(self.select_columns, select))
-		return select
+		return self.do_next(select)
+
+	def __next__(self):
+		select = self.iterator.__next__()
+		return self.do_next(select)
 
 
 class SQLSchema(Schema):
