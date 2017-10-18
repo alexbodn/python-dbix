@@ -28,7 +28,7 @@ class ResultSet(object):
 			column for column in select_columns \
 			if column in self.entity['fields']
 		] if select_columns else self.entity['fields'].keys()
-		field_names = self.entity['fields'].keys()
+		field_names = list(self.entity['fields'].keys())
 		self.select_columns_ix = [
 			field_names.index(column) for column in self.select_columns
 		]
