@@ -46,7 +46,10 @@ class SQLResultSet(ResultSet):
 			insert, values, pk_fields, self.entity['table'], 
 			None if auto_increment else new_key)
 
-		return self.find(*[new_key]).__iter__().next()
+		try:
+			return self.find(*[new_key]).__iter__().next()
+		except:
+			return self.find(*[new_key]).__iter__().__next__()
 
 	def do_filter(self, filter=None):
 		select_from = u'select %s\nfrom %s\n' % (

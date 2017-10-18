@@ -150,7 +150,10 @@ class ResultSet(object):
 			return
 		self.data[key] = record
 
-		return self.find(*[key]).__iter__().next()
+		try:
+			return self.find(*[key]).__iter__().next()
+		except:
+			return self.find(*[key]).__iter__().__next__()
 
 
 	def do_filter(self, filter=None):
