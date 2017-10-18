@@ -1,5 +1,7 @@
 
 from __future__ import print_function
+from future.utils import with_metaclass
+
 import sys, os
 
 from .perlconv import treeconv
@@ -18,9 +20,7 @@ class BuilderMetaClass(type):
 		exec(pytext, dict(schema=self.schema))
 		#print(pytext, file=sys.stdout)
 
-class BuilderMixin(object):
-
-	__metaclass__ = BuilderMetaClass
+class BuilderMixin(with_metaclass(BuilderMetaClass, object)):
 
 	@classmethod
 	def register(cls):
