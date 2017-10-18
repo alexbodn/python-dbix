@@ -36,7 +36,7 @@ class BuilderMixin(with_metaclass(BuilderMetaClass, object)):
 	def add_columns(cls, **columns):
 
 		cls.register()
-		for column, attrs in columns.iteritems():
+		for column, attrs in columns.items():
 
 			if 'data_type' not in attrs:
 				print(
@@ -75,7 +75,7 @@ class BuilderMixin(with_metaclass(BuilderMetaClass, object)):
 		ours = list()
 		remotes = list()
 		if type(field) is dict:
-			for k, v in field.iteritems():
+			for k, v in field.items():
 				ours.append(v.split('.')[-1])
 				remotes.append(k.split('.')[-1])
 		else:

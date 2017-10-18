@@ -116,7 +116,7 @@ class SQLResultSet(ResultSet):
 		args, kw = filter or self.filter
 		in_sql, values = self.render_pk_in(args)
 		sql = [in_sql]
-		for field, value in kw.iteritems():
+		for field, value in kw.items():
 			if field not in self.entity['fields']:
 				continue
 			op, arg = '=', value
@@ -329,10 +329,10 @@ class SQLSchema(Schema):
 				attrs['default_rendered'] = True
 				attrs['default_value'] = self.getdate[attrs['data_type']]
 			else:
-				for event, action in trigger_actions.iteritems():
+				for event, action in trigger_actions.items():
 					self.trigger_actions.setdefault(event, list())
 					self.trigger_actions[event] += action
-				for event, template in trigger_templates.iteritems():
+				for event, template in trigger_templates.items():
 					self.trigger_templates[event] = template
 				self.triggers += triggers
 
@@ -386,10 +386,10 @@ class SQLSchema(Schema):
 			if getattr(self, 'onupdate_inline', '') and self.inline_timestamps:
 				res += self.onupdate_inline % params
 			else:
-				for event, action in trigger_actions.iteritems():
+				for event, action in trigger_actions.items():
 					self.trigger_actions.setdefault(event, list())
 					self.trigger_actions[event] += action
-				for event, template in trigger_templates.iteritems():
+				for event, template in trigger_templates.items():
 					self.trigger_templates[event] = template
 				self.triggers += triggers
 
@@ -410,7 +410,7 @@ class SQLSchema(Schema):
 
 		fields = [
 			self.render_field(name, attrs, entity, prefix=prefix) \
-			for name, attrs in entity['fields'].iteritems()
+			for name, attrs in entity['fields'].items()
 		]
 		constraints = [
 			u'%s %s' % (self.render_name('check%d' % c), check) \
@@ -480,7 +480,7 @@ class SQLSchema(Schema):
 
 		trigger_format = getattr(self, 'trigger_format', '%s')
 		c = 0
-		for key, trigger in self.trigger_templates.iteritems():
+		for key, trigger in self.trigger_templates.items():
 			content = self.trigger_actions.get(key, list())
 			trigger = trigger % dict(c=c, content='\n'.join(content))
 			trigger = trigger_format % trigger

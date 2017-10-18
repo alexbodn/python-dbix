@@ -73,7 +73,7 @@ class ResultSet(object):
 	def fields_sanitize(self, with_op, kw):
 		fields = list()
 		values = list()
-		for key, value in kw.iteritems():
+		for key, value in kw.items():
 			if key not in self.entity['fields']:
 				continue
 			if with_op and not isinstance(value, (list, tuple)):
@@ -311,9 +311,9 @@ class Schema(object):
 					attr_conv.get(key,(0,0))[0] if attr_conv.get(key,(0,0))[0] else key, 
 					attr_conv.get(key,(0,0))[1](0, val) if attr_conv.get(key,(0,0))[1] else val
 				) \
-				for (key, val) in entity['fields'][name].iteritems() \
+				for (key, val) in entity['fields'][name].items() \
 				if key in attr_conv or not only_in_conv
-			])) for (name, attrs) in entity['fields'].iteritems()
+			])) for (name, attrs) in entity['fields'].items()
 		])
 
 		if 'components' in entity:

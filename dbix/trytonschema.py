@@ -40,7 +40,7 @@ class TRYTONSchema(Schema):
 			name, attr_converter, only_in_conv=True)
 		entity['fields'] = OrderedDict([
 			(name, (attrs.pop('data_type'), attrs)) \
-			for name, attrs in entity['fields'].iteritems() \
+			for name, attrs in entity['fields'].items() \
 			if hasattr(fields, attrs['data_type'])
 		])
 		return entity
