@@ -263,11 +263,11 @@ def treeconv(path, exceptpath=None, with_dict=True):
 		for file in files:
 			fullpath = os.path.join(root, file)
 			if fullpath.endswith('.pm'):
-				text = open(fullpath, 'rb').read()
+				text = open(fullpath, 'r').read()
 				if exceptpath and fullpath in exceptpath:
 					continue
 				text = perlconvert(fullpath, text, with_dict=with_dict)
-				##open(fullpath[:-3]+'.py', 'wb').write(text)
+				##open(fullpath[:-3]+'.py', 'w').write(text)
 				##exec(text)
 				all_text.append(text)
 

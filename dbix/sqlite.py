@@ -75,7 +75,7 @@ class SQLITE(SQLSchema):
 		path = self.db_filename(dbname)
 		if os.path.exists(path):
 			return False
-		open(path, 'wb').write('')
+		open(path, 'w').write('')
 		return os.path.exists(path)
 
 	def db_drop(self, dbname):
