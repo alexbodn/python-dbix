@@ -121,7 +121,8 @@ class TestSchema:
 		assert supplier_id == 1
 		assert name == '02'
 		assert user_id == 3
-		assert time_before < updated < datetime.utcnow()
+		time_after = datetime.utcnow()
+		assert time_before < updated < time_after
 
 		rs.create(supplier_id=10, name='20', user_id=30)
 
@@ -135,7 +136,8 @@ class TestSchema:
 			assert name == 'aaa'
 			assert user_id == 7
 			time.sleep(1)
-			assert time_before < updated < datetime.utcnow()
+			time_after = datetime.utcnow()
+			assert time_before < updated < time_after
 		assert c == 1
 
 		time_before = datetime.utcnow()
@@ -148,7 +150,8 @@ class TestSchema:
 			assert name == '021'
 			assert user_id == 4
 			time.sleep(1)
-			assert time_before < updated < datetime.utcnow()
+			time_after = datetime.utcnow()
+			assert time_before < updated < time_after
 		assert c == 1
 
 
@@ -166,12 +169,6 @@ class TestSchema:
 
 		schema.db_connect(dbname)
 
-		schema.load_ddl(
-			schema_input, 
-			#with_fk=False, 
-			#only_tables=['MeasureSign']
-		)
-
 		ddl = schema.ddl(
 			schema_input, 
 			#with_fk=False, 
@@ -179,6 +176,12 @@ class TestSchema:
 		)
 		ddl_file = dbname + schema.dump_extension
 		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
+
+		schema.load_ddl(
+			schema_input, 
+			#with_fk=False, 
+			#only_tables=['MeasureSign']
+		)
 
 		if isinstance(schema, SQLSchema) and 0:
 			_test_dml(schema)

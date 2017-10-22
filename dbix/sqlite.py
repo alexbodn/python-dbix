@@ -65,6 +65,12 @@ class SQLITE(SQLSchema):
 			self.this_render_pk = False
 		return attrs, ''
 
+	def fk_disable(self):
+		return ["PRAGMA foreign_keys = OFF"]
+
+	def fk_enable(self):
+		return ["PRAGMA foreign_keys = ON"]
+
 	def db_filename(self, dbname):
 		return os.path.join(self.path, dbname + self.dbsuffix)
 

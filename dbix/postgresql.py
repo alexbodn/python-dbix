@@ -63,6 +63,18 @@ class POSTGRESQL(SQLSchema):
 			self.this_render_pk = False
 		return attrs, ''
 
+	def fk_disable(self):
+		return [
+			'ALTER TABLE %s DISABLE TRIGGER ALL' % entity['table'] \
+			for entity in self.entities
+		]
+
+	def fk_enable(self):
+		return [
+			'ALTER TABLE %s ENABLE TRIGGER ALL' % entity['table'] \
+			for entity in self.entities
+		]
+
 	def isdba(self):
 		return 'user_dba' in self.connectparams \
 			and 'password_dba' in self.connectparams

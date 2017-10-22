@@ -12,6 +12,7 @@ class MYSQL(SQLSchema):
 
 	_type_conv = {
 		'datetime': 'timestamp', 
+		#'datetime': 'timestamp(6)', 
 	}
 
 	getdate = {
@@ -99,6 +100,12 @@ class MYSQL(SQLSchema):
 			return attrs, 'AUTO_INCREMENT'
 		return attrs, ''
 
+	def fk_disable(self):
+		return ["SET FOREIGN_KEY_CHECKS=0"]
+
+	def fk_enable(self):
+		return ["SET FOREIGN_KEY_CHECKS=1"]
+
 	def type_conv(self, attrs, entity, name):
 		data_type = super(MYSQL, self).type_conv(attrs, entity, name)
 		timestamp_attrs = ('set_on_create', 'set_on_update')
@@ -106,6 +113,8 @@ class MYSQL(SQLSchema):
 			if 'hastimestamps' in entity:
 				if data_type == 'timestamp':
 					data_type = 'datetime'
+				elif data_type == 'timestamp(6)':
+					data_type = 'datetime(6)'
 				self.inline_timestamps = False
 			else:
 				entity['hastimestamps'] = 1
@@ -147,6 +156,14 @@ class MYSQL(SQLSchema):
 			CREATE DATABASE %(db)s;
 			""" % connectparams
 		)
+		try:
+			cur.execute(
+				"""
+				SET GLOBAL log_bin_trust_function_creators=1;
+			"""
+			)
+		except:
+			pass
 		conn.commit()
 		cur.execute(
 			"""
@@ -251,14 +268,14 @@ class MYSQL(SQLSchema):
 			return
 		cur = self.connection.cursor()
 		with self.connection:
-			for c, script in enumerate(statements):
+			for script in statements:
 				script = script.strip()
 				if not script or script == self.default_delimiter:
 					continue
 				if self.query_prefix:
-					script = self.query_prefix + script
+					cur.execute(self.query_prefix)
 				cur.execute(script)
-				self.db_commit()
+#				self.db_commit()
 		return cur
 
 	def perform_insert(self, script, param, pk_fields, table, new_key):
