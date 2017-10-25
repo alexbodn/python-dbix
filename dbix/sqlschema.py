@@ -411,6 +411,8 @@ class SQLSchema(Schema):
 		self.trigger_templates = dict()
 		self.check_constraints = list()
 
+		deferred_fk = getattr(self, 'deferred_fk', '')
+
 		entity = super(SQLSchema, self).get_entity(name)
 
 		fields = [
@@ -428,7 +430,7 @@ class SQLSchema(Schema):
 					', '.join([
 						'%s' % self.render_name(column) \
 						for column in entity['primary_key']
-					])
+					]), 
 				)
 			)
 		for c, unique in enumerate(entity['unique_constraints']):
@@ -440,7 +442,7 @@ class SQLSchema(Schema):
 					self.render_name(name), 
 					', '.join([
 						'%s' % self.render_name(column) for column in columns
-					])
+					]), 
 				)
 			)
 		for name, other, ours, remotes, extra in entity['belongs_to']:
@@ -451,13 +453,14 @@ class SQLSchema(Schema):
 					name, other), file=sys.stderr)
 				continue
 
-			constraint = '%s foreign key (%s) references %s (%s)' % (
+			constraint = '%s foreign key (%s) references %s (%s) %s' % (
 					self.render_name(u'fk_%s_%s' % (entity['table'], name)), 
 					', '.join(['%s' % self.render_name(our) for our in ours]), 
 					self.render_name(other_table), 
 					', '.join([
 						'%s' % self.render_name(remote) for remote in remotes
-					])
+					]), 
+					deferred_fk, 
 				)
 			if not with_fk:
 				continue

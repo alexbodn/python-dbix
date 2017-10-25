@@ -32,8 +32,7 @@ class SQLITE(SQLSchema):
 		time="strftime('%H:%M:%f', 'now')",
 	)
 
-	deferred = "DEFERRABLE INITIALLY DEFERRED"
-	deferrable = "DEFERRABLE INITIALLY IMMEDIATE"
+	deferred_fk = "DEFERRABLE INITIALLY DEFERRED"
 
 	on_update_trigger = """
 		create trigger [tr_%(table)s%%(c)d] 
