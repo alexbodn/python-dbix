@@ -490,6 +490,7 @@ class SQLSchema(Schema):
 			trigger = trigger % dict(c=c, content='\n'.join(content))
 			trigger = trigger_format % trigger
 			create.append(trigger)
+			c += 1
 
 		for c1, trigger in enumerate(self.triggers):
 			trigger = trigger % dict(c=c+c1)

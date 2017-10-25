@@ -21,6 +21,9 @@ class POSTGRESQL(SQLSchema):
 		time="CURRENT_TIME at time zone 'utc'",
 	)
 
+	deferred = "DEFERRABLE INITIALLY DEFERRED"
+	deferrable = "DEFERRABLE INITIALLY IMMEDIATE"
+
 	render_paramplace = '%s'
 
 	on_update_trigger = """
