@@ -169,19 +169,20 @@ class TestSchema:
 
 		schema.db_connect(dbname)
 
-		ddl = schema.ddl(
-			schema_input, 
-			#with_fk=False, 
-			#only_tables=['MeasureSign']
-		)
-		ddl_file = dbname + schema.dump_extension
-		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
-
 		schema.load_ddl(
 			schema_input, 
 			#with_fk=False, 
 			#only_tables=['MeasureSign']
 		)
+
+		ddl = schema.ddl(
+			schema_input, 
+			#with_fk=False, 
+			#only_tables=['MeasureSign']
+		)
+		assert not not ddl
+		ddl_file = dbname + schema.dump_extension
+		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
 
 		if isinstance(schema, SQLSchema) and 0:
 			_test_dml(schema)
@@ -254,3 +255,8 @@ class TestSchema:
 		self._do_test_schema(schema)
 		self._do_test_schema_small(schema)
 
+
+if __name__ == '__main__':
+
+	ts = TestSchema()
+	ts.test_sqlite()
