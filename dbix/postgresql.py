@@ -1,10 +1,24 @@
 
-from .sqlschema import SQLSchema
+from .sqlschema import SQLSchema, SQLResultSet
 
 import psycopg2
 
 
+class POSTGRESQLResultSet(SQLResultSet):
+
+	def perform_insert(self, script, param, pk_fields, table, new_key):
+		script += u' returning %s' % u','. join ([
+				self.schema.render_name(field) for field in pk_fields
+			])
+		res = self.schema.db_cursor()
+		res.execute(script, param)
+
+		return res.fetchone()
+
+
 class POSTGRESQL(SQLSchema):
+
+	rs_class = POSTGRESQLResultSet
 
 	_type_conv = dict(
 		enum='varchar', 
@@ -185,11 +199,8 @@ class POSTGRESQL(SQLSchema):
 	def db_executescript(self, script):
 		return self.db_execute(script + ";\nselect 0=1;")
 
-	def perform_insert(self, script, param, pk_fields, table, new_key):
-		script += u' returning %s' % u','. join ([
-				self.render_name(field) for field in pk_fields
-			])
-		res = self.db_execute(script, param)
-		return res.fetchone()
-
+	def db_cursor(self):
+		if not self.connection:
+			return
+		return self.connection.cursor()
 

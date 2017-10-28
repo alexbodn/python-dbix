@@ -1,11 +1,29 @@
 
-from .sqlschema import SQLSchema
+from .sqlschema import SQLSchema, SQLResultSet
 
 import sqlite3
 import os
 
 
+class SQLITEResultSet(SQLResultSet):
+
+	def perform_insert(self, script, param, pk_fields, table, new_key):
+		self.schema.db_execute(script, param)
+		if new_key:
+			return new_key
+		script = u'select %sfrom %s\nwhere rowid=last_insert_rowid()' % (
+			u','. join ([
+				self.schema.render_name(field) for field in pk_fields
+			]), 
+			self.schema.render_name(table)
+		)
+		res = self.schema.db_execute(script)
+		return res.fetchone()
+
+
 class SQLITE(SQLSchema):
+
+	rs_class = SQLITEResultSet
 
 	_type_conv = dict(
 		enum='varchar', 
@@ -159,17 +177,4 @@ class SQLITE(SQLSchema):
 		with self.connection:
 			cur.executescript(self.query_prefix + ';' + script)
 		return cur
-
-	def perform_insert(self, script, param, pk_fields, table, new_key):
-		self.db_execute(script, param)
-		if new_key:
-			return new_key
-		script = u'select %sfrom %s\nwhere rowid=last_insert_rowid()' % (
-			u','. join ([
-				self.render_name(field) for field in pk_fields
-			]), 
-			self.render_name(table)
-		)
-		res = self.db_execute(script)
-		return res.fetchone()
 

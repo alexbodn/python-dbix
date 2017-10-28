@@ -42,14 +42,17 @@ class SQLResultSet(ResultSet):
 			','.join([self.schema.render_paramplace] * len(values))
 		)
 		pk_fields = self.entity['primary_key']
-		new_key = self.schema.perform_insert(
+
+		new_key = self.perform_insert(
 			insert, values, pk_fields, self.entity['table'], 
 			None if auto_increment else new_key)
 
-		try:
-			return self.find(*[new_key]).__iter__().next()
-		except:
-			return self.find(*[new_key]).__iter__().__next__()
+#		self.schema.db_rollback()
+
+		iter = self.find(*[new_key]).__iter__()
+		res = getattr(iter, self.nextmethod)()
+
+		return res
 
 	def do_filter(self, filter=None):
 		select_from = u'select %s\nfrom %s\n' % (

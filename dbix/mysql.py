@@ -1,11 +1,25 @@
 
-from .sqlschema import SQLSchema
+from .sqlschema import SQLSchema, SQLResultSet
 
 import MySQLdb as mysqldb
 #import mysql.connector as mysqldb
 
 
+class MYSQLResultSet(SQLResultSet):
+
+	def perform_insert(self, script, param, pk_fields, table, new_key):
+		self.schema.db_execute(script, param)
+		if new_key:
+			return new_key
+		script = u'select %s=last_insert_id()' % \
+			self.schema.render_name(pk_fields[0])
+		res = self.schema.db_execute(script)
+		return res.fetchone()
+
+
 class MYSQL(SQLSchema):
+
+	rs_class = MYSQLResultSet
 
 	inline_domains = True
 	inline_timestamps = False
@@ -277,14 +291,4 @@ class MYSQL(SQLSchema):
 				cur.execute(script)
 #				self.db_commit()
 		return cur
-
-	def perform_insert(self, script, param, pk_fields, table, new_key):
-		self.db_execute(script, param)
-		if new_key:
-			return new_key
-		script = u'select %s=last_insert_id()' % \
-			self.render_name(pk_fields[0])
-		res = self.db_execute(script)
-		return res.fetchone()
-
 

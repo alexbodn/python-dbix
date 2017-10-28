@@ -22,6 +22,8 @@ class ResultSet(object):
 		self.set_columns(select_columns)
 		self.dict_record = dict_record
 
+		self.nextmethod = 'next' if sys.version_info[0] < 3 else '__next__'
+
 
 	def set_columns(self, select_columns):
 		self.select_columns = [
@@ -150,10 +152,8 @@ class ResultSet(object):
 			return
 		self.data[key] = record
 
-		try:
-			return self.find(*[key]).__iter__().next()
-		except:
-			return self.find(*[key]).__iter__().__next__()
+		iter = self.find(*[key]).__iter__()
+		return getattr(iter, self.nextmethod)()
 
 
 	def do_filter(self, filter=None):
