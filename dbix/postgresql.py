@@ -5,28 +5,6 @@ import psycopg2
 import psycopg2.extensions as pe
 
 
-import traceback
-
-class MyConnection(pe.connection):
-
-	def commit(self):
-		print 'commit'
-#		print traceback.print_stack()
-		return super(MyConnection, self).commit()
-
-	def rollback(self):
-		print 'rollback'
-#		print traceback.print_stack()
-		return super(MyConnection, self).rollback()
-
-class MyCursor(pe.cursor):
-
-	def execute(self, query, param, **kw):
-		print 'execute'
-		print traceback.print_stack()
-		return super(MyCursor, self).execute(query, param, **kw)
-
-
 class POSTGRESQLResultSet(SQLResultSet):
 
 	def perform_insert(self, script, param, pk_fields, table, new_key):
@@ -161,10 +139,7 @@ class POSTGRESQL(SQLSchema):
 		try:
 			connectparams = dict(db=dbname)
 			connectparams.update(self.connectparams)
-			self.connection = psycopg2.connect(
-				self.dsn % connectparams, 
-#				connection_factory=MyConnection, 
-			)
+			self.connection = psycopg2.connect(self.dsn % connectparams,)
 			self.connection.set_isolation_level(
 				pe.ISOLATION_LEVEL_READ_COMMITTED)
 			self.dbname = dbname
@@ -227,7 +202,5 @@ class POSTGRESQL(SQLSchema):
 	def db_cursor(self):
 		if not self.connection:
 			return
-		return self.connection.cursor(
-#				cursor_factory=MyCursor, 
-		)
+		return self.connection.cursor()
 
