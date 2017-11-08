@@ -25,6 +25,14 @@ class ResultSet(object):
 		self.nextmethod = 'next' if sys.version_info[0] < 3 else '__next__'
 
 
+	def __enter__(self):
+		return self
+
+	def __exit__(self, exc_type, exc_value, traceback):
+		if exc_type:
+			print(exc_value)
+
+
 	def set_columns(self, select_columns):
 		self.select_columns = [
 			column for column in select_columns \
@@ -151,9 +159,8 @@ class ResultSet(object):
 			)
 			return
 		self.data[key] = record
-
-		iter = self.find(*[key]).__iter__()
-		return getattr(iter, self.nextmethod)()
+		
+		return key
 
 
 	def do_filter(self, filter=None):
@@ -202,6 +209,10 @@ class ResultSet(object):
 	def __iter__(self):
 		self.iterator = self.do_filter()
 		return self
+
+
+	def db_now(self):
+		return self.schema.db_now()
 
 
 	def do_next(self, select):
@@ -266,7 +277,7 @@ class Schema(object):
 		mediumtext=lambda x: x, 
 		date=lambda x: datetime.strptime(x, '%Y-%m-%d').date(), 
 		time=lambda x: datetime.strptime(x, '%H:%M:%f').time(), 
-		datetime=lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%f'), 
+		datetime=lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S.%f'), 
 		boolean=lambda x: Schema.isfalse(x) or 1, 
 	)
 
@@ -382,4 +393,9 @@ class Schema(object):
 	def resultset(self, name, select_columns=None, dict_record=False):
 		return self.rs_class(
 			self, name, select_columns=select_columns, dict_record=dict_record)
+
+
+	def db_now(self):
+		return datetime.utcnow()
+
 

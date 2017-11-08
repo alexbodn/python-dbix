@@ -14,6 +14,13 @@ class SQLResultSet(ResultSet):
 			schema, name, select_columns=select_columns, dict_record=dict_record
 		)
 
+	def __enter__(self):
+		self.schema.connection.__enter__()
+		return self
+
+	def __exit__(self, exc_type, exc_value, traceback):
+		return self.schema.connection.__exit__(exc_type, exc_value, traceback)
+
 	def update_operator(self, left, op, right):
 		update_operators = {
 			'=': lambda l, r: u'%s=%s' % (l, r),
@@ -47,12 +54,7 @@ class SQLResultSet(ResultSet):
 			insert, values, pk_fields, self.entity['table'], 
 			None if auto_increment else new_key)
 
-#		self.schema.db_rollback()
-
-		iter = self.find(*[new_key]).__iter__()
-		res = getattr(iter, self.nextmethod)()
-
-		return res
+		return new_key
 
 	def do_filter(self, filter=None):
 		select_from = u'select %s\nfrom %s\n' % (
@@ -544,6 +546,13 @@ class SQLSchema(Schema):
 	def db_executelist(self, statements):
 		script = self.script_combine(statements)
 		self.db_executescript(script)
+
+
+	def db_now(self):
+		script = 'select %s as timestamp' % self.getdate['timestamp']
+		cur = self.db_execute(script)
+		if cur:
+			return cur.fetchone()[0]
 
 
 	def load_ddl(

@@ -2,6 +2,29 @@
 from .sqlschema import SQLSchema, SQLResultSet
 
 import psycopg2
+import psycopg2.extensions as pe
+
+
+import traceback
+
+class MyConnection(pe.connection):
+
+	def commit(self):
+		print 'commit'
+#		print traceback.print_stack()
+		return super(MyConnection, self).commit()
+
+	def rollback(self):
+		print 'rollback'
+#		print traceback.print_stack()
+		return super(MyConnection, self).rollback()
+
+class MyCursor(pe.cursor):
+
+	def execute(self, query, param, **kw):
+		print 'execute'
+		print traceback.print_stack()
+		return super(MyCursor, self).execute(query, param, **kw)
 
 
 class POSTGRESQLResultSet(SQLResultSet):
@@ -10,8 +33,7 @@ class POSTGRESQLResultSet(SQLResultSet):
 		script += u' returning %s' % u','. join ([
 				self.schema.render_name(field) for field in pk_fields
 			])
-		res = self.schema.db_cursor()
-		res.execute(script, param)
+		res = self.schema.db_execute(script, param)
 
 		return res.fetchone()
 
@@ -28,11 +50,10 @@ class POSTGRESQL(SQLSchema):
 		mediumtext='text', 
 	)
 
-	getdate_all = "current_timestamp"
 	getdate = dict(
-		timestamp="CURRENT_TIMESTAMP at time zone 'utc'",
-		date="CURRENT_DATE at time zone 'utc'",
-		time="CURRENT_TIME at time zone 'utc'",
+		timestamp="CLOCK_TIMESTAMP() at time zone 'utc'",
+		date="cast((CLOCK_TIMESTAMP() at time zone 'utc') as DATE)",
+		time="cast((CLOCK_TIMESTAMP() at time zone 'utc') as TIME)",
 	)
 
 	deferred_fk = "DEFERRABLE INITIALLY DEFERRED"
@@ -99,7 +120,7 @@ class POSTGRESQL(SQLSchema):
 		if not self.isdba():
 			return
 		conn = psycopg2.connect(self.dsn_dba % self.connectparams)
-		conn.set_isolation_level(0)
+		conn.set_isolation_level(pe.ISOLATION_LEVEL_AUTOCOMMIT)
 		cur = conn.cursor()
 		connectparams = dict(db=dbname)
 		connectparams.update(self.connectparams)
@@ -108,7 +129,7 @@ class POSTGRESQL(SQLSchema):
 			CREATE DATABASE %(db)s WITH OWNER=%(user)s;
 			""" % connectparams
 		)
-		conn.commit()
+		cur.close()
 		conn.close()
 		dbs = self.db_list()
 		return dbs and dbname in dbs
@@ -121,33 +142,42 @@ class POSTGRESQL(SQLSchema):
 			return True
 		if dbname == self.dbname:
 			self.db_disconnect()
-		conn = psycopg2.connect(self.dsn_dba % self.connectparams)
-		conn.set_isolation_level(0)
+		conn = psycopg2.connect(
+			self.dsn_dba % self.connectparams, 
+		)
+		conn.set_isolation_level(pe.ISOLATION_LEVEL_AUTOCOMMIT)
 		cur = conn.cursor()
 		cur.execute("DROP DATABASE %(db)s;" % dict(db=dbname))
-		conn.commit()
+		cur.close()
 		conn.close()
 		dbs = self.db_list()
 		return dbs and dbname not in dbs
+
+	def db_reset(self):
+		self.connection = None
+		self.dbname = None
 
 	def db_connect(self, dbname):
 		try:
 			connectparams = dict(db=dbname)
 			connectparams.update(self.connectparams)
-			self.connection = psycopg2.connect(self.dsn % connectparams)
+			self.connection = psycopg2.connect(
+				self.dsn % connectparams, 
+#				connection_factory=MyConnection, 
+			)
+			self.connection.set_isolation_level(
+				pe.ISOLATION_LEVEL_READ_COMMITTED)
 			self.dbname = dbname
 			return True
 		except:
-			self.connection = None
-			self.dbname = None
+			self.db_reset()
 			return False
 
 	def db_disconnect(self):
 		if not self.connection:
 			return
 		self.connection.close()
-		self.connection = None
-		self.dbname = None
+		self.db_reset()
 
 	def db_commit(self):
 		if not self.connection:
@@ -172,6 +202,7 @@ class POSTGRESQL(SQLSchema):
 			cur = conn.cursor()
 			cur.execute("SELECT datname FROM pg_database;")
 			res = [row[0] for row in cur.fetchall()]
+			cur.close()
 			if not self.connection:
 				conn.close()
 			return res
@@ -179,21 +210,15 @@ class POSTGRESQL(SQLSchema):
 		    return None
 
 	def db_execute(self, script, param=list()):
-		if not self.connection:
-			return
-		cur = self.connection.cursor()
-		with self.connection:
-			cur.execute(self.query_prefix + script, param)
+		cur = self.db_cursor()
+		cur.execute(self.query_prefix + script, param)
 		#for notice in self.connection.notices:
 		#	print (notice)
 		return cur
 
 	def db_executemany(self, script, param=list()):
-		if not self.connection:
-			return
-		cur = self.connection.cursor()
-		with self.connection:
-			cur.executemany(self.query_prefix + script, param)
+		cur = self.db_cursor()
+		cur.executemany(self.query_prefix + script, param)
 		return cur
 
 	def db_executescript(self, script):
@@ -202,5 +227,7 @@ class POSTGRESQL(SQLSchema):
 	def db_cursor(self):
 		if not self.connection:
 			return
-		return self.connection.cursor()
+		return self.connection.cursor(
+#				cursor_factory=MyCursor, 
+		)
 

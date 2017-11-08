@@ -3,11 +3,13 @@ from .sqlschema import SQLSchema, SQLResultSet
 
 import sqlite3
 import os
+from datetime import datetime
 
 
 class SQLITEResultSet(SQLResultSet):
 
 	def perform_insert(self, script, param, pk_fields, table, new_key):
+
 		self.schema.db_execute(script, param)
 		if new_key:
 			return new_key
@@ -18,6 +20,7 @@ class SQLITEResultSet(SQLResultSet):
 			self.schema.render_name(table)
 		)
 		res = self.schema.db_execute(script)
+
 		return res.fetchone()
 
 
@@ -40,14 +43,13 @@ class SQLITE(SQLSchema):
 	PRAGMA foreign_keys = ON;
 	"""
 	query_prefix = """
-	PRAGMA recursive_triggers=1;
-	--PRAGMA foreign_keys = Off;
+	--PRAGMA recursive_triggers=1;
 	"""
 
 	getdate = dict(
 		timestamp="strftime('%Y-%m-%d %H:%M:%f', 'now')",
 		date="strftime('%Y-%m-%d', 'now')",
-		time="strftime('%H:%M:%f', 'now')",
+		time="strftime('%H:%M:%S.%f', 'now')",
 	)
 
 	deferred_fk = "DEFERRABLE INITIALLY DEFERRED"
@@ -92,12 +94,18 @@ class SQLITE(SQLSchema):
 		return ["PRAGMA foreign_keys = ON"]
 
 	def db_filename(self, dbname):
+		if dbname == ':memory:':
+			return dbname
 		return os.path.join(self.path, dbname + self.dbsuffix)
 
 	def isdba(self, **kw):
+		if self.dbname == ':memory:':
+			return True
 		return self.path and os.access(self.path, os.W_OK)
 
 	def db_create(self, dbname):
+		if dbname == ':memory:':
+			return True
 		path = self.db_filename(dbname)
 		if os.path.exists(path):
 			return False
@@ -109,6 +117,8 @@ class SQLITE(SQLSchema):
 			return
 		if dbname == self.dbname:
 			self.db_disconnect()
+		if dbname == ':memory:':
+			return True
 		path = self.db_filename(dbname)
 		if os.path.exists(path):
 			os.remove(path)
@@ -118,7 +128,9 @@ class SQLITE(SQLSchema):
 		try:
 			path = self.db_filename(dbname)
 			self.connection = sqlite3.connect(
-				path, detect_types=sqlite3.PARSE_DECLTYPES)
+				path, 
+				detect_types=sqlite3.PARSE_DECLTYPES, 
+			)
 			self.dbname = dbname
 			return True
 		except:
@@ -147,6 +159,8 @@ class SQLITE(SQLSchema):
 		return self.dbname
 
 	def db_list(self):
+		if self.dbname == ':memory:':
+			return [self.dbname]
 		return [
 			db[:-self.dbsuffixlen] for db in os.listdir(self.path) \
 			if db.endswith(self.dbsuffix)
@@ -155,26 +169,33 @@ class SQLITE(SQLSchema):
 	def db_execute(self, script, param=list()):
 		if not self.connection:
 			return
-		cur = self.connection.cursor()
-		with self.connection:
-			cur.executescript(self.query_prefix)
-			cur.execute(script, param)
+		cur = self.db_cursor()
+		cur.executescript(self.query_prefix)
+		cur.execute(script, param)
 		return cur
 
 	def db_executemany(self, script, param=list()):
 		if not self.connection:
 			return
-		cur = self.connection.cursor()
-		with self.connection:
-			cur.executescript(self.query_prefix)
-			cur.executemany(script, param)
+		cur = self.db_cursor()
+		cur.executescript(self.query_prefix)
+		cur.executemany(script, param)
 		return cur
 
 	def db_executescript(self, script):
 		if not self.connection:
 			return
-		cur = self.connection.cursor()
-		with self.connection:
-			cur.executescript(self.query_prefix + ';' + script)
+		cur = self.db_cursor()
+		cur.executescript(self.query_prefix + ';' + script)
 		return cur
+
+	def db_now(self):
+		snow = super(SQLITE, self).db_now()
+		return datetime.strptime(snow, '%Y-%m-%d %H:%M:%S.%f')
+
+
+	def db_cursor(self):
+		if not self.connection:
+			return
+		return self.connection.cursor()
 

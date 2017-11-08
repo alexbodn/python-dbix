@@ -19,6 +19,9 @@ class MYSQLResultSet(SQLResultSet):
 
 class MYSQL(SQLSchema):
 
+	inline_fk = False
+	engine = 'InnoDB'
+
 	rs_class = MYSQLResultSet
 
 	inline_domains = True
@@ -90,7 +93,7 @@ class MYSQL(SQLSchema):
 
 	auto_increment = " AUTO_INCREMENT"
 
-	table_sufix = "ENGINE=MyISAM"
+	table_sufix = "ENGINE=%s" % engine
 
 
 	@staticmethod
@@ -210,6 +213,7 @@ class MYSQL(SQLSchema):
 			connectparams = dict(db=dbname)
 			connectparams.update(self.connectparams_user)
 			self.connection = mysqldb.connect(**connectparams)
+			self.connection.autocommit(False)
 			self.dbname = dbname
 			return True
 		except:
@@ -253,22 +257,18 @@ class MYSQL(SQLSchema):
 		if not self.connection:
 			return
 		cur = self.connection.cursor()
-		with self.connection:
-			if self.query_prefix:
-				script = self.query_prefix + script
-			cur.execute(script, param)
-		#for notice in self.connection.notices:
-		#	print (notice)
+		if self.query_prefix:
+			script = self.query_prefix + script
+		cur.execute(script, param)
 		return cur
 
 	def db_executemany(self, script, param=list()):
 		if not self.connection:
 			return
 		cur = self.connection.cursor()
-		with self.connection:
-			if self.query_prefix:
-				script = self.query_prefix + script
-			cur.executemany(script, param)
+		if self.query_prefix:
+			script = self.query_prefix + script
+		cur.executemany(script, param)
 		return cur
 
 
@@ -281,14 +281,12 @@ class MYSQL(SQLSchema):
 		if not self.connection:
 			return
 		cur = self.connection.cursor()
-		with self.connection:
-			for script in statements:
-				script = script.strip()
-				if not script or script == self.default_delimiter:
-					continue
-				if self.query_prefix:
-					cur.execute(self.query_prefix)
-				cur.execute(script)
-#				self.db_commit()
+		for script in statements:
+			script = script.strip()
+			if not script or script == self.default_delimiter:
+				continue
+			if self.query_prefix:
+				cur.execute(self.query_prefix)
+			cur.execute(script)
 		return cur
 
