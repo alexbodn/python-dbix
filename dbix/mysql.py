@@ -7,6 +7,20 @@ import MySQLdb as mysqldb
 
 class MYSQLResultSet(SQLResultSet):
 
+	def __enter__(self):
+		ret = super(MYSQLResultSet, self).__enter__()
+		if not self.schema.fk_enabled_status:
+			self.schema.fk_disable()
+		self.schema.fk_enabled_status += 1
+		return ret
+
+	def __exit__(self, exc_type, exc_value, traceback):
+		self.schema.fk_enabled_status -= 1
+		if not self.schema.fk_enabled_status:
+			self.schema.fk_enable()
+		return super(MYSQLResultSet, self).__exit__(
+			exc_type, exc_value, traceback)
+
 	def perform_insert(self, script, param, pk_fields, table, new_key):
 		self.schema.db_execute(script, param)
 		if new_key:
@@ -95,6 +109,8 @@ class MYSQL(SQLSchema):
 
 	table_sufix = "ENGINE=%s" % engine
 
+	fk_enabled_status = 0
+
 
 	@staticmethod
 	def render_number(value):
@@ -118,10 +134,10 @@ class MYSQL(SQLSchema):
 		return attrs, ''
 
 	def fk_disable(self):
-		return ["SET FOREIGN_KEY_CHECKS=0"]
+		self.db_execute("SET FOREIGN_KEY_CHECKS=0")
 
 	def fk_enable(self):
-		return ["SET FOREIGN_KEY_CHECKS=1"]
+		self.db_execute("SET FOREIGN_KEY_CHECKS=1")
 
 	def type_conv(self, attrs, entity, name):
 		data_type = super(MYSQL, self).type_conv(attrs, entity, name)
