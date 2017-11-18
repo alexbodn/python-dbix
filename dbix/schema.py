@@ -243,6 +243,13 @@ class ResultSet(object):
 	description = property(get_description, )
 
 
+class ChildEntity(object):
+
+	schema = None
+	entity = None
+	reference = None
+
+
 class Schema(object):
 
 	rs_class = ResultSet
@@ -294,18 +301,19 @@ class Schema(object):
 
 
 	def new_entity(self, name):
-		entity = dict(
-			table = None, 
-			fields = OrderedDict(), 
-			primary_key = list(), 
-			unique_constraints = list(), 
-			belongs_to = list(), 
-			has_many = list(), 
-			components = list(), 
-			parent_column = None, 
-		)
 		self.data.setdefault(name, OrderedDict())
-		self.entities.setdefault(name, entity)
+		if name not in self.entities:
+			entity = dict(
+				table = None, 
+				fields = OrderedDict(), 
+				primary_key = list(), 
+				unique_constraints = list(), 
+				belongs_to = list(), 
+				has_many = dict(), 
+				parent_column = None, 
+			)
+			self.entities[name] = entity
+		return self.entities[name]
 
 
 	def __init__(self):
@@ -338,9 +346,6 @@ class Schema(object):
 				if key in attr_conv or not only_in_conv
 			])) for (name, attrs) in entity['fields'].items()
 		])
-
-		if 'components' in entity:
-			del entity['components']
 
 		return entity
 

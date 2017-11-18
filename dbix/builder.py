@@ -24,18 +24,17 @@ class BuilderMixin(with_metaclass(BuilderMetaClass, object)):
 
 	@classmethod
 	def register(cls):
-
-		cls.schema.new_entity(cls.__name__)
+		return cls.schema.new_entity(cls.__name__)
 
 	@classmethod
 	def table(cls, name):
-		cls.register()
-		cls.schema.entities[cls.__name__]['table'] = name
+		entity = cls.register()
+		entity['table'] = name
 
 	@classmethod
 	def add_columns(cls, **columns):
 
-		cls.register()
+		entity = cls.register()
 		for column, attrs in columns.items():
 
 			if 'data_type' not in attrs:
@@ -55,23 +54,23 @@ class BuilderMixin(with_metaclass(BuilderMetaClass, object)):
 					arg = cls.schema.field_attr[key](converter, arg)
 				kwargs[key] = arg
 
-			cls.schema.entities[cls.__name__]['fields'][column] = kwargs
+			entity['fields'][column] = kwargs
 
 	@classmethod
 	def set_primary_key(cls, *columns):
-		cls.register()
-		cls.schema.entities[cls.__name__]['primary_key'] = columns
+		entity = cls.register()
+		entity['primary_key'] = columns
 
 	@classmethod
 	def add_unique_constraint(cls, *columns):
-		cls.register()
+		entity = cls.register()
 		if len(columns) != 2 or type(columns[1]) != list:
 			columns = (None, columns[0])
-		cls.schema.entities[cls.__name__]['unique_constraints'].append(columns)
+		entity['unique_constraints'].append(columns)
 
 	@classmethod
 	def belongs_to(cls, name, other, field, extra=dict()):
-		cls.register()
+		entity = cls.register()
 		ours = list()
 		remotes = list()
 		if type(field) is dict:
@@ -81,24 +80,23 @@ class BuilderMixin(with_metaclass(BuilderMetaClass, object)):
 		else:
 			ours = [field]
 			remotes = [field]
-		cls.schema.entities[cls.__name__]['belongs_to'].append(
+		entity['belongs_to'].append(
 			(name, other, ours, remotes, extra))
 
 	@classmethod
 	def has_many(cls, name, other, field=None):
-		cls.register()
-		cls.schema.entities[cls.__name__]['has_many'].append(
-			(name, other, field))
+		entity = cls.register()
+		entity['has_many'][name] = (other, field)
 
 	@classmethod
 	def load_components(cls, *args):
-		cls.register()
-		cls.schema.entities[cls.__name__]['components'] = args
+		entity = cls.register()
+		#entity['components'] = args
 
 	@classmethod
 	def parent_column(cls, name):
-		cls.register()
-		cls.schema.entities[cls.__name__]['parent_column'] = name
+		entity = cls.register()
+		entity['parent_column'] = name
 
 	@classmethod
 	# it is assumed that the schema creator has checked it in the perl code
