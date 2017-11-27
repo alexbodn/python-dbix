@@ -112,20 +112,15 @@ class TestSchema:
 			select_columns=('supplier_id', 'name', 'user_id', 'updated'), 
 			#dict_record=True, 
 		)
-		#rs.create(updated=datetime.now(), supplier_id=2, name='3', user_id=4)
 		time_before = rs.db_now()
-		print('time_before', time_before)
 		time.sleep(1)
 		with rs:
-			print('before_create', rs.db_now())
-			supplier_id = rs.create(supplier_id=1, name='02', user_id=3)
+			supplier_id = rs.create_key(supplier_id=1, name='02', user_id=3)
 			##schema.db_commit()
 		time.sleep(1)
 		time_after = rs.db_now()
-		print('time_after', time_after)
 		c = 0
 		for (supplier_id, name, user_id, updated) in rs.find(supplier_id):
-			print('updated', updated)
 			c += 1
 			assert supplier_id == 1
 			assert name == '02'
@@ -137,7 +132,7 @@ class TestSchema:
 		if with_rollback:
 			try:
 				with rs:
-					supplier_id = rs.create(supplier_id=2, name='03', user_id=4)
+					supplier_id = rs.create_key(supplier_id=2, name='03', user_id=4)
 					##schema.db_rollback()
 					raise Exception("hope will rollback")
 			except Exception as e:
@@ -148,7 +143,7 @@ class TestSchema:
 			assert c == 0
 
 		with rs:
-			rs.create(supplier_id=10, name='20', user_id=30)
+			rs.create_key(supplier_id=10, name='20', user_id=30)
 			##schema.db_commit()
 			time_before = rs.db_now()
 			time.sleep(1)
@@ -193,10 +188,47 @@ class TestSchema:
 			assert updated < time_after
 		assert c == 1
 
+	def _test_resultset_dict(self, schema, with_rollback=True):
 
-	def _do_test_schema(self, schema, dbname='icecat', with_rollback=True):
+		supplier_id = 1
 
-		schema_input = os.path.join(here, 'schema')
+		rs_dict = schema.resultset(
+			'Supplier', 
+			select_columns=('supplier_id', 'name', 'user_id', 'updated'), 
+			dict_record=True, 
+		)
+
+		with rs_dict:
+			c = 0
+			for rec in rs_dict.find(supplier_id):
+				c += 1
+				assert supplier_id == rec['supplier_id']
+			assert c == 1
+
+		with rs_dict:
+			data = dict(supplier_id=20, name='30', user_id=40)
+			rec = rs_dict.create(**data)
+			for key in data:
+				assert rec[key] == data[key]
+
+		schema.echo = 1
+		if with_rollback:
+			try:
+				with rs_dict:
+					print ('~~~~~~~~~~~~~~~~~~~~~~~', )
+					rs_dict.create(supplier_id=22, name='03', user_id=4)
+					##schema.db_rollback()
+					raise Exception("hope will rollback")
+			except Exception as e:
+				print(e)
+			c = 0
+			for rec in rs_dict.find(22):
+				c += 1
+			assert c == 0
+		schema.echo = 0
+
+
+	def _schema_ddl(self, schema, schema_input, dbname):
 
 		schema.init()
 
@@ -222,10 +254,18 @@ class TestSchema:
 		ddl_file = dbname + schema.dump_extension
 		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
 
+
+	def _do_test_schema(self, schema, dbname='icecat', with_rollback=True):
+
+		schema_input = os.path.join(here, 'schema')
+
+		self._schema_ddl(schema, schema_input, dbname)
+
 		if isinstance(schema, SQLSchema) and 0:
 			_test_dml(schema)
 
 		self._test_resultset(schema, with_rollback=with_rollback)
+#		self._test_resultset_dict(schema, with_rollback=with_rollback)
 
 		schema.db_disconnect()
 
@@ -233,48 +273,29 @@ class TestSchema:
 	def _do_test_schema_small(self, schema):
 
 		schema_input = os.path.join(here, 'example')
-		dbname = 'myapp'
+		dbname = 'omyapp'
 
-		schema.init()
-
-		schema.db_drop(dbname)
-		schema.db_create(dbname)
-
-		schema.db_connect(dbname)
-
-		schema.load_ddl(
-			schema_input, 
-			#with_fk=False, 
-			#only_tables=['MeasureSign']
-		)
-
-		ddl = schema.ddl(
-			schema_input, 
-			#with_fk=False, 
-			#only_tables=['MeasureSign']
-		)
-		ddl_file = dbname + schema.dump_extension
-		open(os.path.join(here, 'dumps', ddl_file), 'w').write(ddl)
+		self._schema_ddl(schema, schema_input, dbname)
 
 		schema.db_disconnect()
 
 
 	def test_schema(self):
 		schema = Schema()
-
 		self._do_test_schema(schema, with_rollback=False)
+		schema = Schema()
 		self._do_test_schema_small(schema)
 
 	def test_sqlite_disk(self):
 		schema = SQLITE(path=os.path.join(here, 'data'))
-
 		self._do_test_schema(schema)
+		schema = SQLITE(path=os.path.join(here, 'data'))
 		self._do_test_schema_small(schema)
 
 	def test_sqlite_memory(self):
 		schema = SQLITE(path=os.path.join(here, 'data'))
-
 		self._do_test_schema(schema, dbname=':memory:')
+		schema = SQLITE(path=os.path.join(here, 'data'))
 		self._do_test_schema_small(schema)
 
 	def test_postgresql(self):
@@ -284,8 +305,8 @@ class TestSchema:
 			report.append("no configuration for postgresql")
 			return
 		schema = POSTGRESQL(**config)
-
 		self._do_test_schema(schema)
+		schema = POSTGRESQL(**config)
 		self._do_test_schema_small(schema)
 
 	def test_mysql(self):
@@ -295,8 +316,8 @@ class TestSchema:
 			report.append("no configuration for mysql")
 			return
 		schema = MYSQL(**config)
-
 		self._do_test_schema(schema)
+		#schema = MYSQL(**config)
 		self._do_test_schema_small(schema)
 
 
@@ -307,5 +328,5 @@ if __name__ == '__main__':
 	ts = TestSchema()
 	ts.setup_class()
 	#ts.test_postgresql()
-	ts.test_mysql()
-	#ts.test_sqlite_memory()
+	#ts.test_mysql()
+	ts.test_sqlite_memory()

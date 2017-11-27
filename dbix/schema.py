@@ -13,7 +13,6 @@ class ResultSet(object):
 
 	filter = [], {}
 
-
 	def __init__(self, schema, name, select_columns=None, dict_record=False):
 		self.schema = schema
 		self.entity = schema.entities[name]
@@ -24,14 +23,11 @@ class ResultSet(object):
 
 		self.nextmethod = 'next' if sys.version_info[0] < 3 else '__next__'
 
-
 	def __enter__(self):
 		return self
 
 	def __exit__(self, exc_type, exc_value, traceback):
-		if exc_type:
-			print(exc_value)
-
+		return
 
 	def set_columns(self, select_columns):
 		self.select_columns = [
@@ -42,7 +38,6 @@ class ResultSet(object):
 		self.select_columns_ix = [
 			field_names.index(column) for column in self.select_columns
 		]
-
 
 	def query_operator(self, left, op, right):
 		query_operators = {
@@ -57,7 +52,6 @@ class ResultSet(object):
 			'in': lambda l, r: l in r,
 		}
 		return op in query_operators and query_operators[op](left, right)
-
 
 	def update_operator(self, left, op, right):
 		update_operators = {
@@ -75,10 +69,8 @@ class ResultSet(object):
 			return update_operators[op](left, right)
 		return left
 
-
 	def operator_has_list(self, op):
 		return op.lower() in ['in']
-
 
 	def fields_sanitize(self, with_op, kw):
 		fields = list()
@@ -96,7 +88,6 @@ class ResultSet(object):
 			values.append(value)
 
 		return fields, values
-
 
 	def field_init(self, field, value, pk=None):
 		entityfield = self.entity['fields'][field]
@@ -116,7 +107,6 @@ class ResultSet(object):
 
 		return value, nullable, auto_increment
 
-
 	def primary_key(self, kw):
 		key = list()
 		auto_increment = False
@@ -133,8 +123,7 @@ class ResultSet(object):
 			key.append(value)
 		return key, auto_increment
 
-
-	def create(self, **kw):
+	def create_key(self, **kw):
 		key, auto_increment = self.primary_key(kw)
 		record = list()
 		for field in self.entity['fields']:
@@ -159,9 +148,13 @@ class ResultSet(object):
 			)
 			return
 		self.data[key] = record
-		
+
 		return key
 
+	def create(self, **kw):
+		key = self.create_key(**kw)
+		for rec in self.find(key):
+			return rec
 
 	def do_filter(self, filter=None):
 		args, kw = (filter or self.filter)
@@ -178,7 +171,6 @@ class ResultSet(object):
 					break
 			else:
 				yield(key)
-
 
 	def update(self, **kw):
 
@@ -200,42 +192,34 @@ class ResultSet(object):
 					self.data[key][c] = self.update_operator(
 						self.data[key][c], *op)
 
-
 	def find(self, *args, **kw):
 		self.filter = args, kw
 		return self
-
 
 	def __iter__(self):
 		self.iterator = self.do_filter()
 		return self
 
-
 	def db_now(self):
 		return self.schema.db_now()
-
 
 	def do_next(self, select):
 		if self.dict_record:
 			return dict(zip(self.select_columns, select))
 		return select
 
-
 	def do_next_key(self, key):
 		record = self.data[key]
 		select = tuple([record[c] for c in self.select_columns_ix])
 		return self.do_next(select)
 
-
 	def next(self):
 		key = self.iterator.next()
 		return self.do_next_key(key)
 
-
 	def __next__(self):
 		key = self.iterator.__next__()
 		return self.do_next_key(key)
-
 
 	def get_description(self):
 		return [(field, ) for field in self.select_columns]

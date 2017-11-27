@@ -33,8 +33,9 @@ class MYSQLResultSet(SQLResultSet):
 
 class MYSQL(SQLSchema):
 
-	inline_fk = False
 	engine = 'InnoDB'
+#	engine = 'MyISAM'
+	inline_fk = engine != 'InnoDB'
 
 	rs_class = MYSQLResultSet
 
@@ -133,6 +134,13 @@ class MYSQL(SQLSchema):
 			return attrs, 'AUTO_INCREMENT'
 		return attrs, ''
 
+	def render_unique_column(self, name, entity):
+		column = super(MYSQL, self).render_unique_column(name, entity)
+		attrs = entity['fields'][name]
+		if attrs['data_type'] in ('text', 'blob') and 'size' not in attrs:
+			column += '(1024)'
+		return column
+
 	def fk_disable(self):
 		self.db_execute("SET FOREIGN_KEY_CHECKS=0")
 
@@ -200,7 +208,7 @@ class MYSQL(SQLSchema):
 		conn.commit()
 		cur.execute(
 			"""
-			GRANT ALL PRIVILEGES ON `%(db)s`.* TO '%(user)s;'
+			GRANT ALL PRIVILEGES ON `%(db)s`.* TO '%(user)s';
 			""" % connectparams
 		)
 		conn.commit()
@@ -233,16 +241,14 @@ class MYSQL(SQLSchema):
 			self.dbname = dbname
 			return True
 		except:
-			self.connection = None
-			self.dbname = None
+			self.db_reset()
 			return False
 
 	def db_disconnect(self):
 		if not self.connection:
 			return
 		self.connection.close()
-		self.connection = None
-		self.dbname = None
+		self.db_reset()
 
 	def db_commit(self):
 		if not self.connection:
@@ -270,18 +276,15 @@ class MYSQL(SQLSchema):
 		    return None
 
 	def db_execute(self, script, param=list()):
-		if not self.connection:
-			return
-		cur = self.connection.cursor()
+		self.pre_execute(script, param)
+		cur = self.db_cursor()
 		if self.query_prefix:
 			script = self.query_prefix + script
 		cur.execute(script, param)
 		return cur
 
 	def db_executemany(self, script, param=list()):
-		if not self.connection:
-			return
-		cur = self.connection.cursor()
+		cur = self.db_cursor()
 		if self.query_prefix:
 			script = self.query_prefix + script
 		cur.executemany(script, param)
@@ -294,15 +297,14 @@ class MYSQL(SQLSchema):
 
 
 	def db_executelist(self, statements):
-		if not self.connection:
-			return
-		cur = self.connection.cursor()
+		cur = self.db_cursor()
 		for script in statements:
 			script = script.strip()
 			if not script or script == self.default_delimiter:
 				continue
 			if self.query_prefix:
 				cur.execute(self.query_prefix)
+			print(script)
 			cur.execute(script)
 		return cur
 

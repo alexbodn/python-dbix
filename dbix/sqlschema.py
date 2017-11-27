@@ -39,7 +39,7 @@ class SQLResultSet(ResultSet):
 		return '', []
 
 
-	def create(self, **kw):
+	def create_key(self, **kw):
 		new_key, auto_increment = self.primary_key(kw)
 		fields, values = self.fields_sanitize(False, kw)
 
@@ -150,10 +150,6 @@ class SQLResultSet(ResultSet):
 
 		return where, values
 
-	def find(self, *args, **kw):
-		self.filter = args, kw
-		return self
-
 	def next(self):
 		select = self.iterator.next()
 		return self.do_next(select)
@@ -164,6 +160,8 @@ class SQLResultSet(ResultSet):
 
 
 class SQLSchema(Schema):
+
+	echo = False
 
 	rs_class = SQLResultSet
 
@@ -264,6 +262,9 @@ class SQLSchema(Schema):
 
 	def render_name(self, name):
 		return '[%s]' % name
+
+	def render_unique_column(self, name, entity):
+		return self.render_name(name)
 
 	def render_autoincrement(self, attrs, entity, name):
 		if 'is_auto_increment' in attrs and entity['primary_key'] != (name,):
@@ -433,7 +434,7 @@ class SQLSchema(Schema):
 				'%s primary key (%s)' % (
 					self.render_name('pk_%s' % entity['table']), 
 					', '.join([
-						'%s' % self.render_name(column) \
+						'%s' % self.render_unique_column(column, entity) \
 						for column in entity['primary_key']
 					]), 
 				)
@@ -446,7 +447,8 @@ class SQLSchema(Schema):
 				'%s unique (%s)' % (
 					self.render_name(name), 
 					', '.join([
-						'%s' % self.render_name(column) for column in columns
+						'%s' % self.render_unique_column(column, entity) \
+						for column in columns
 					]), 
 				)
 			)
@@ -524,6 +526,15 @@ class SQLSchema(Schema):
 		return entities
 
 
+	def load_ddl(
+			self, pm_location, only_tables=None, with_fk=True, with_prefix=[]):
+		super(SQLSchema, self).load_ddl(
+			pm_location, only_tables=only_tables, with_fk=with_fk)
+		ddl = self.ddl_list(with_fk=with_fk, only_tables=only_tables)
+		self.db_executelist(with_prefix + ddl)
+		#schema.db_commit()
+
+
 	def ddl(self, pm_location, prefix='\t', only_tables=None, with_fk=True):
 		entities = self.ddl_list(
 			prefix=prefix, only_tables=only_tables, with_fk=with_fk)
@@ -536,6 +547,11 @@ class SQLSchema(Schema):
 			u'%s%s' % (statement, self.default_delimiter) \
 			for statement in statements if statement.strip()
 		])
+
+
+	def pre_execute(self, script, param):
+		if self.echo:
+			print('execute %s, %s' % (script, param))
 
 
 	def db_executefile(self, filename):
@@ -555,11 +571,14 @@ class SQLSchema(Schema):
 			return cur.fetchone()[0]
 
 
-	def load_ddl(
-			self, pm_location, only_tables=None, with_fk=True, with_prefix=[]):
-		super(SQLSchema, self).load_ddl(
-			pm_location, only_tables=only_tables, with_fk=with_fk)
-		ddl = self.ddl_list(with_fk=with_fk, only_tables=only_tables)
-		self.db_executelist(with_prefix + ddl)
-		#schema.db_commit()
+	def db_reset(self):
+		self.connection = None
+		self.dbname = None
+
+
+	def db_cursor(self):
+		if not self.connection:
+			return
+		return self.connection.cursor()
+
 

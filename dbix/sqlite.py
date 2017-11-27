@@ -1,14 +1,39 @@
 
+from __future__ import print_function
+
 from .sqlschema import SQLSchema, SQLResultSet
 
 import sqlite3
 import os
 from datetime import datetime
 
+import traceback, sys
+
+show_track = 0
+
+class DebugConnection(sqlite3.Connection):
+	def commit(self):
+		if show_track and 0:
+			print('============== commit', file=sys.stderr)
+			print(dir(self), file=sys.stderr)
+			#traceback.print_stack()
+			#print('--------------', file=sys.stderr)
+		ret = super(DebugConnection, self).commit()
+
+	def rollback(self):
+		if show_track and 0:
+			print('============== rollback', file=sys.stderr)
+			traceback.print_stack()
+			print('--------------', file=sys.stderr)
+		ret = super(DebugConnection, self).rollback()
+
 
 class SQLITEResultSet(SQLResultSet):
 
 	def perform_insert(self, script, param, pk_fields, table, new_key):
+
+		global show_track
+		show_track = self.dict_record
 
 		self.schema.db_execute(script, param)
 		if new_key:
@@ -130,20 +155,19 @@ class SQLITE(SQLSchema):
 			self.connection = sqlite3.connect(
 				path, 
 				detect_types=sqlite3.PARSE_DECLTYPES, 
+#				factory=DebugConnection, 
 			)
 			self.dbname = dbname
 			return True
 		except:
-			self.connection = None
-			self.dbname = None
+			self.db_reset()
 			return False
 
 	def db_disconnect(self):
 		if not self.connection:
 			return
 		self.connection.close()
-		self.connection = None
-		self.dbname = None
+		self.db_reset()
 
 	def db_commit(self):
 		if not self.connection:
@@ -167,24 +191,19 @@ class SQLITE(SQLSchema):
 		]
 
 	def db_execute(self, script, param=list()):
-		if not self.connection:
-			return
+		self.pre_execute(script, param)
 		cur = self.db_cursor()
-		cur.executescript(self.query_prefix)
+		cur.execute(self.query_prefix)
 		cur.execute(script, param)
 		return cur
 
 	def db_executemany(self, script, param=list()):
-		if not self.connection:
-			return
 		cur = self.db_cursor()
-		cur.executescript(self.query_prefix)
+		cur.execute(self.query_prefix)
 		cur.executemany(script, param)
 		return cur
 
 	def db_executescript(self, script):
-		if not self.connection:
-			return
 		cur = self.db_cursor()
 		cur.executescript(self.query_prefix + ';' + script)
 		return cur
@@ -192,10 +211,4 @@ class SQLITE(SQLSchema):
 	def db_now(self):
 		snow = super(SQLITE, self).db_now()
 		return datetime.strptime(snow, '%Y-%m-%d %H:%M:%S.%f')
-
-
-	def db_cursor(self):
-		if not self.connection:
-			return
-		return self.connection.cursor()
 

@@ -131,10 +131,6 @@ class POSTGRESQL(SQLSchema):
 		dbs = self.db_list()
 		return dbs and dbname not in dbs
 
-	def db_reset(self):
-		self.connection = None
-		self.dbname = None
-
 	def db_connect(self, dbname):
 		try:
 			connectparams = dict(db=dbname)
@@ -185,6 +181,7 @@ class POSTGRESQL(SQLSchema):
 		    return None
 
 	def db_execute(self, script, param=list()):
+		self.pre_execute(script, param)
 		cur = self.db_cursor()
 		cur.execute(self.query_prefix + script, param)
 		#for notice in self.connection.notices:
@@ -198,9 +195,3 @@ class POSTGRESQL(SQLSchema):
 
 	def db_executescript(self, script):
 		return self.db_execute(script + ";\nselect 0=1;")
-
-	def db_cursor(self):
-		if not self.connection:
-			return
-		return self.connection.cursor()
-
